@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { BookingRepository } from '../../domain/repositories/booking.repository';
-import { ShowRepository } from '../../domain/repositories/show.repository';
+import type { BookingRepository } from '../../domain/repositories/booking.repository';
+import type { ShowRepository } from '../../domain/repositories/show.repository';
 import { BookSeatsCommand } from './dto/book-seats.command';
 import { Booking } from '../../domain/entities/booking';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
