@@ -1,0 +1,3 @@
+export const MOVIE_REPOSITORY = Symbol("MOVIE_REPOSITORY");
+export const SHOW_REPOSITORY = Symbol("SHOW_REPOSITORY");
+export const BOOKING_REPOSITORY = Symbol("BOOKING_REPOSITORY");
