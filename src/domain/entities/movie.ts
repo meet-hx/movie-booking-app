@@ -1,3 +1,6 @@
+import { Genre } from './genre';
+import { Language } from './language';
+
 export type MovieType = 'TWO_D' | 'THREE_D' | 'FOUR_D' | 'IMAX';
 
 export interface Movie {
@@ -7,4 +10,6 @@ export interface Movie {
   duration: number;
   type: MovieType;
   genreId: string;
+  genre: Genre;
+  languages: Language[];
 }

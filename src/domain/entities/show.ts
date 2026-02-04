@@ -1,3 +1,7 @@
+import { Movie } from "./movie";
+import { Theater } from "./theater";
+import { TheaterScreen } from "./theaterScreen";
+
 export interface ShowPricingContext {
   showId: string;
   basePrice: number;
@@ -12,4 +16,7 @@ export interface Show {
   startTime: Date;
   endTime: Date;
   basePrice: number;
+  movie: Movie;
+  theater: Theater;
+  theaterScreen: TheaterScreen;
 }

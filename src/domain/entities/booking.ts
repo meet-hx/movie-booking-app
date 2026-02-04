@@ -1,3 +1,6 @@
+import { Show } from './show';
+import { User } from './user';
+
 export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
 export type BookingStatus = 'RESERVED' | 'CONFIRMED' | 'CANCELLED';
 
@@ -16,4 +19,6 @@ export interface Booking {
   serviceCharge: number;
   paymentStatus: PaymentStatus;
   seats: BookingSeat[];
+  user: User;
+  show: Show;
 }
