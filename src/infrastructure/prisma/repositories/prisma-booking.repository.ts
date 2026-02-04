@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { BookingRepository } from '../../../domain/repositories/booking/booking.repository';
 import {
-  BookingRepository,
   CreateBookingPayload,
-} from '../../../domain/repositories/booking.repository';
-import { Booking } from '../../../domain/entities/booking';
+  CreateBookingResult,
+} from '../../../domain/repositories/booking/createBooking';
 
 @Injectable()
 export class PrismaBookingRepository implements BookingRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(payload: CreateBookingPayload): Promise<Booking> {
+  async create(payload: CreateBookingPayload): Promise<CreateBookingResult> {
     const booking = await this.prisma.booking.create({
       data: {
         userId: payload.userId,
@@ -42,11 +42,7 @@ export class PrismaBookingRepository implements BookingRepository {
       totalAmount: booking.totalAmount.toNumber(),
       serviceCharge: booking.serviceCharge.toNumber(),
       paymentStatus: booking.paymentStatus,
-      seats: booking.seats.map((seat) => ({
-        seatId: seat.seatId,
-        amount: seat.amount.toNumber(),
-        bookingStatus: seat.bookingStatus,
-      })),
+      seats: booking.seats,
     };
   }
 }
