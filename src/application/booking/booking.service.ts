@@ -1,24 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { BookingRepository } from '../../domain/repositories/booking.repository';
-import type { ShowRepository } from '../../domain/repositories/show.repository';
 import { BookSeatsCommand } from './dto/book-seats.command';
 import { Booking } from '../../domain/entities/booking';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
+import { ShowService } from '../show/show.service';
 
 @Injectable()
 export class BookingService {
   constructor(
     @Inject(REPOSITORY_TOKENS.BookingRepository)
     private readonly bookingRepository: BookingRepository,
-    @Inject(REPOSITORY_TOKENS.ShowRepository)
-    private readonly showRepository: ShowRepository,
+    private readonly showService: ShowService,
   ) {}
 
   async bookSeats(command: BookSeatsCommand): Promise<Booking> {
-    const pricingContext = await this.showRepository.getPricingContext(
-      command.showId,
-      command.seatIds,
-    );
+    const pricingContext = await this.showService.getPricingContext({
+      showId: command.showId,
+      seatIds: command.seatIds,
+    });
 
     if (!pricingContext) {
       throw new Error('Show pricing context not found.');
@@ -33,7 +32,10 @@ export class BookingService {
       };
     });
 
-    const subtotal = seatAmounts.reduce((total, seat) => total + seat.amount, 0);
+    const subtotal = seatAmounts.reduce(
+      (total, seat) => total + seat.amount,
+      0,
+    );
     const totalAmount = subtotal + command.serviceCharge;
 
     return this.bookingRepository.create({
