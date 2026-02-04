@@ -1,17 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ShowService } from './show.service';
-import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
-import { PrismaShowRepository } from 'src/infrastructure/prisma/repositories/prisma-show.repository';
+import { PersistenceModule } from 'src/infrastructure/persistence/persistence.module';
 
 @Module({
-  imports: [],
-  providers: [
-    ShowService,
-    {
-      provide: REPOSITORY_TOKENS.ShowRepository,
-      useClass: PrismaShowRepository,
-    },
-  ],
+  imports: [PersistenceModule],
+  providers: [ShowService],
   exports: [ShowService],
 })
 export class ShowModule {}
