@@ -52,10 +52,6 @@ export class CommonExceptionFilter implements ExceptionFilter {
       }
     }
 
-    if (exception instanceof Error && exception.message) {
-      return exception.message;
-    }
-
     return defaultMessageForStatus(statusCode);
   }
 }
