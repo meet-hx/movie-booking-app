@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ScreenSeatRepository } from '../../../domain/repositories/screenSeat/screenSeat.repository';
+import {
+  ScreenSeatCreateData,
+  ScreenSeatRepository,
+} from '../../../domain/repositories/screenSeat/screenSeat.repository';
 import { ScreenSeat } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
@@ -27,5 +30,13 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
     });
 
     return Boolean(screenSeat);
+  }
+
+  async createMany(data: ScreenSeatCreateData[]): Promise<number> {
+    const result = await this.prisma.screenSeat.createMany({
+      data,
+    });
+
+    return result.count;
   }
 }
