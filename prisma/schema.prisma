@@ -40,7 +40,7 @@ model Movie {
   shows       Show[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([genreId])
@@ -53,7 +53,7 @@ model Genre {
   movies Movie[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 }
 
@@ -63,7 +63,7 @@ model Language {
   movies MovieLanguage[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 }
 
@@ -74,7 +74,7 @@ model MovieLanguage {
   language   Language @relation(fields: [languageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@id([movieId, languageId])
@@ -90,7 +90,7 @@ model User {
   bookings  Booking[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 }
 
@@ -109,7 +109,7 @@ model Theater {
   shows   Show[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([city, state])
@@ -127,7 +127,7 @@ model TheaterScreen {
   shows          Show[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@unique([theaterId, screenNo])
@@ -144,7 +144,7 @@ model SeatCategory {
   seats           ScreenSeat[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([theaterScreenId])
@@ -161,7 +161,7 @@ model ScreenSeat {
   bookingSeats    BookingSeat[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([theaterScreenId])
@@ -182,7 +182,7 @@ model Show {
   bookings        Booking[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([movieId])
@@ -204,7 +204,7 @@ model Booking {
   seats         BookingSeat[]
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([userId])
@@ -221,7 +221,7 @@ model BookingSeat {
   seat          ScreenSeat    @relation(fields: [seatId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime  @updatedAt @default(now())
   deletedAt DateTime?
 
   @@index([bookingId])
