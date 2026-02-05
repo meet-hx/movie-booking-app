@@ -10,6 +10,7 @@ import type { TheaterScreenRepository } from '../../domain/repositories/theaterS
 import { SeatService } from '../seat/seat.service';
 import { SeatCategoryService } from '../seatCategory/seat-category.service';
 import { TheaterService } from '../theater/theater.service';
+import { Strings } from '../../utils/strings';
 
 @Injectable()
 export class TheaterScreenService {
@@ -29,7 +30,9 @@ export class TheaterScreenService {
     for (const screen of request.screens) {
       if (screenNumbers.has(screen.screenNo)) {
         throw new BadRequestException(
-          `Duplicate screenNo ${screen.screenNo} in request.`,
+          Strings.theaterScreen.duplicateScreenNo({
+            screenNo: screen.screenNo,
+          }),
         );
       }
       screenNumbers.add(screen.screenNo);
@@ -46,7 +49,10 @@ export class TheaterScreenService {
 
       if (existingScreen) {
         throw new BadRequestException(
-          `Screen ${screen.screenNo} already exists for theater ${request.theaterId}.`,
+          Strings.theaterScreen.screenAlreadyExists({
+            screenNo: screen.screenNo,
+            theaterId: request.theaterId,
+          }),
         );
       }
 
@@ -95,7 +101,7 @@ export class TheaterScreenService {
   async ensureScreenExists(id: string) {
     const exists = await this.theaterScreenRepository.exists(id);
     if (!exists) {
-      throw new BadRequestException('Theater screen not found.');
+      throw new BadRequestException(Strings.theaterScreen.notFound);
     }
   }
 }

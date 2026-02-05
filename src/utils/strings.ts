@@ -4,4 +4,20 @@ export class Strings{
         invalidPassword: "Invalid password",
         userAlreadyExists: "User already exists"
     }
+    static theater = {
+        notFound: "Theater not found."
+    }
+    static theaterScreen = {
+        notFound: "Theater screen not found.",
+        duplicateScreenNo: (options: { screenNo: number }) =>
+            `Duplicate screenNo ${options.screenNo} in request.`,
+        screenAlreadyExists: (options: { screenNo: number; theaterId: string }) =>
+            `Screen ${options.screenNo} already exists for theater ${options.theaterId}.`
+    }
+    static seatCategory = {
+        notFound: (options: { id: string }) =>
+            `Seat category ${options.id} not found.`,
+        mismatch: (options: { categoryId: string; theaterScreenId: string }) =>
+            `Seat category ${options.categoryId} does not belong to screen ${options.theaterScreenId}.`
+    }
 }
