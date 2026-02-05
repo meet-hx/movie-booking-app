@@ -13,7 +13,7 @@ import {
   TheaterShowtimesResponseDto,
 } from './dto/show-availability.dto';
 
-@ApiTags('shows')
+@ApiTags('Shows')
 @Controller('shows')
 export class ShowController {
   constructor(private readonly showService: ShowService) {}
