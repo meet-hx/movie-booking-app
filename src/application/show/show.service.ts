@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
-import type { ShowRepository } from '../../domain/repositories/show.repository';
+import type { ShowRepository } from '../../domain/repositories/show/show.repository';
 
 @Injectable()
 export class ShowService {

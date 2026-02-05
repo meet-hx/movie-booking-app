@@ -1,4 +1,4 @@
-import { Movie } from '../entities/movie';
+import { Movie } from '@prisma/client';
 
 export interface MovieRepository {
   findById(id: string): Promise<Movie | null>;

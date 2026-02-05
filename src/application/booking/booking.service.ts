@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { BookingRepository } from '../../domain/repositories/booking.repository';
+import type { BookingRepository } from '../../domain/repositories/booking/booking.repository';
 import { BookSeatsCommand } from './dto/book-seats.command';
-import { Booking } from '../../domain/entities/booking';
+import { Booking } from '@prisma/client';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
 import { ShowService } from '../show/show.service';
+import { CreateBookingResponseDto } from './dto/create-booking.dto';
 
 @Injectable()
 export class BookingService {
@@ -13,7 +14,9 @@ export class BookingService {
     private readonly showService: ShowService,
   ) {}
 
-  async bookSeats(command: BookSeatsCommand): Promise<Booking> {
+  async bookSeats(
+    command: BookSeatsCommand,
+  ): Promise<CreateBookingResponseDto> {
     const pricingContext = await this.showService.getPricingContext({
       showId: command.showId,
       seatIds: command.seatIds,

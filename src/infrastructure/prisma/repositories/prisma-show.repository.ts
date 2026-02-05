@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ShowRepository } from '../../../domain/repositories/show.repository';
-import { Show, ShowPricingContext } from '../../../domain/entities/show';
+import { ShowRepository } from '../../../domain/repositories/show/show.repository';
+import { Show } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -27,11 +27,13 @@ export class PrismaShowRepository implements ShowRepository {
 
     return {
       ...show,
-      basePrice: show.basePrice.toNumber(),
     };
   }
 
-  async getPricingContext(showId: string, seatIds: string[]): Promise<ShowPricingContext | null> {
+  async getPricingContext(
+    showId: string,
+    seatIds: string[],
+  ): Promise<any | null> {
     const show = await this.prisma.show.findUnique({
       where: { id: showId },
       select: {
