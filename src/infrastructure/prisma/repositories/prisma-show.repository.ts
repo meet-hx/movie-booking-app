@@ -3,6 +3,7 @@ import {
   ShowRepository,
   CreateShowData,
   ShowFilters,
+  ShowWithDetails,
 } from '../../../domain/repositories/show/show.repository';
 import { Show } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -10,6 +11,33 @@ import { PrismaService } from '../prisma.service';
 @Injectable()
 export class PrismaShowRepository implements ShowRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  private buildWhere(filters: ShowFilters) {
+    const where: any = {};
+
+    if (filters.theaterId) {
+      where.theaterId = filters.theaterId;
+    }
+
+    if (filters.movieId) {
+      where.movieId = filters.movieId;
+    }
+
+    if (filters.date) {
+      const startOfDay = new Date(filters.date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(filters.date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      where.startTime = {
+        gte: startOfDay,
+        lte: endOfDay,
+      };
+    }
+
+    return where;
+  }
 
   async findById(id: string): Promise<Show | null> {
     const show = await this.prisma.show.findUnique({
@@ -93,33 +121,54 @@ export class PrismaShowRepository implements ShowRepository {
   }
 
   async findAll(filters: ShowFilters): Promise<Show[]> {
-    const where: any = {};
+    const where = this.buildWhere(filters);
+    return this.prisma.show.findMany({
+      where,
+      orderBy: {
+        startTime: 'asc',
+      },
+    });
+  }
 
-    if (filters.theaterId) {
-      where.theaterId = filters.theaterId;
-    }
-
-    if (filters.movieId) {
-      where.movieId = filters.movieId;
-    }
-
-    if (filters.date) {
-      const startOfDay = new Date(filters.date);
-      startOfDay.setHours(0, 0, 0, 0);
-
-      const endOfDay = new Date(filters.date);
-      endOfDay.setHours(23, 59, 59, 999);
-
-      where.startTime = {
-        gte: startOfDay,
-        lte: endOfDay,
-      };
-    }
+  async findAllWithDetails(filters: ShowFilters): Promise<ShowWithDetails[]> {
+    const where = this.buildWhere(filters);
 
     return this.prisma.show.findMany({
       where,
       orderBy: {
         startTime: 'asc',
+      },
+      select: {
+        startTime: true,
+        movie: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            duration: true,
+            type: true,
+            genre: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        theater: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            phone: true,
+            email: true,
+            website: true,
+          },
+        },
       },
     });
   }

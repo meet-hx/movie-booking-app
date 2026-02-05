@@ -12,6 +12,12 @@ import { TheaterService } from '../theater/theater.service';
 import { TheaterScreenService } from '../theaterScreen/theater-screen.service';
 import { CreateShowRequestDto } from './dto/create-show.dto';
 import { ListShowsQueryDto } from './dto/list-shows.dto';
+import {
+  ListShowsByMovieQueryDto,
+  ListShowsByTheaterQueryDto,
+  MovieShowtimesResponseDto,
+  TheaterShowtimesResponseDto,
+} from './dto/show-availability.dto';
 import { Strings } from '../../utils/strings';
 
 @Injectable()
@@ -74,6 +80,60 @@ export class ShowService {
     });
   }
 
+  async listShowsByMovie(
+    query: ListShowsByMovieQueryDto,
+  ): Promise<TheaterShowtimesResponseDto[]> {
+    const shows = await this.showRepository.findAllWithDetails({
+      movieId: query.movieId,
+      date: query.date ? new Date(query.date) : undefined,
+    });
+
+    const theaterMap = new Map<string, TheaterShowtimesResponseDto>();
+
+    shows.forEach((show) => {
+      const existing = theaterMap.get(show.theater.id);
+
+      if (existing) {
+        existing.startTimes.push(show.startTime);
+        return;
+      }
+
+      theaterMap.set(show.theater.id, {
+        ...show.theater,
+        startTimes: [show.startTime],
+      });
+    });
+
+    return Array.from(theaterMap.values());
+  }
+
+  async listShowsByTheater(
+    query: ListShowsByTheaterQueryDto,
+  ): Promise<MovieShowtimesResponseDto[]> {
+    const shows = await this.showRepository.findAllWithDetails({
+      theaterId: query.theaterId,
+      date: query.date ? new Date(query.date) : undefined,
+    });
+
+    const movieMap = new Map<string, MovieShowtimesResponseDto>();
+
+    shows.forEach((show) => {
+      const existing = movieMap.get(show.movie.id);
+
+      if (existing) {
+        existing.startTimes.push(show.startTime);
+        return;
+      }
+
+      movieMap.set(show.movie.id, {
+        ...show.movie,
+        startTimes: [show.startTime],
+      });
+    });
+
+    return Array.from(movieMap.values());
+  }
+
   getPricingContext(options: { showId: string; seatIds: string[] }) {
     return this.showRepository.getPricingContext(
       options.showId,
@@ -85,4 +145,3 @@ export class ShowService {
     return this.showRepository.findById(id);
   }
 }
-
