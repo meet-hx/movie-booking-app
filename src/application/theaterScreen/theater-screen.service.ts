@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  NotFoundException,
   forwardRef,
 } from '@nestjs/common';
 import { AddTheaterScreensRequestDto } from './dto/add-theater-screens.dto';
@@ -11,6 +12,7 @@ import { SeatService } from '../seat/seat.service';
 import { SeatCategoryService } from '../seatCategory/seat-category.service';
 import { TheaterService } from '../theater/theater.service';
 import { Strings } from '../../utils/strings';
+import { UpdateTheaterScreenRequestDto } from './dto/update-theater-screen.dto';
 
 @Injectable()
 export class TheaterScreenService {
@@ -103,5 +105,57 @@ export class TheaterScreenService {
     if (!exists) {
       throw new BadRequestException(Strings.theaterScreen.notFound);
     }
+  }
+
+  async getScreen(id: string) {
+    const screen = await this.theaterScreenRepository.findById(id);
+    if (!screen) {
+      throw new NotFoundException(Strings.theaterScreen.notFound);
+    }
+    return screen;
+  }
+
+  async listScreensByTheater(theaterId: string) {
+    await this.theaterService.ensureExists(theaterId);
+    return this.theaterScreenRepository.findByTheaterId(theaterId);
+  }
+
+  async updateScreen(id: string, request: UpdateTheaterScreenRequestDto) {
+    const screen = await this.theaterScreenRepository.findById(id);
+    if (!screen) {
+      throw new NotFoundException(Strings.theaterScreen.notFound);
+    }
+
+    if (
+      request.screenNo !== undefined &&
+      request.screenNo !== screen.screenNo
+    ) {
+      const existingScreen =
+        await this.theaterScreenRepository.findByTheaterAndScreenNo(
+          screen.theaterId,
+          request.screenNo,
+        );
+
+      if (existingScreen) {
+        throw new BadRequestException(
+          Strings.theaterScreen.screenAlreadyExists({
+            screenNo: request.screenNo,
+            theaterId: screen.theaterId,
+          }),
+        );
+      }
+    }
+
+    return this.theaterScreenRepository.update(id, request);
+  }
+
+  async deleteScreen(id: string) {
+    const screen = await this.theaterScreenRepository.findById(id);
+    if (!screen) {
+      throw new NotFoundException(Strings.theaterScreen.notFound);
+    }
+
+    await this.theaterScreenRepository.delete(id);
+    return { deleted: true };
   }
 }
