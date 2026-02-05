@@ -164,3 +164,35 @@ export class UpdateTheaterRequestDto {
   @IsString()
   website?: string | null;
 }
+
+export class TheaterResponseDto {
+  @ApiProperty({ example: 'e8a1e8c6-61ad-4261-a093-5e418ac992fc' })
+  id: string;
+
+  @ApiProperty({ example: 'Cineplex' })
+  name: string;
+
+  @ApiProperty({ example: '123 Main St' })
+  address: string;
+
+  @ApiProperty({ example: 'Mumbai' })
+  city: string;
+
+  @ApiProperty({ example: 'MH' })
+  state: string;
+
+  @ApiProperty({ example: '400001' })
+  zipCode: string;
+
+  @ApiProperty({ example: 'India' })
+  country: string;
+
+  @ApiProperty({ example: '+91-9876543210' })
+  phone: string;
+
+  @ApiProperty({ example: 'info@cineplex.com' })
+  email: string;
+
+  @ApiProperty({ example: 'https://cineplex.com' })
+  website: string;
+}
