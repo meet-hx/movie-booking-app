@@ -1,7 +1,7 @@
 generator client {
-  provider       = "prisma-client"
-  output         = "../src/generated/prisma"
-  moduleFormat   = "cjs"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -39,6 +39,10 @@ model Movie {
   languages   MovieLanguage[]
   shows       Show[]
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@index([genreId])
   @@index([title])
 }
@@ -47,12 +51,20 @@ model Genre {
   id     String  @id @default(uuid())
   name   String  @unique
   movies Movie[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
 
 model Language {
   id     String          @id @default(uuid())
   name   String          @unique
   movies MovieLanguage[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
 
 model MovieLanguage {
@@ -61,65 +73,85 @@ model MovieLanguage {
   movie      Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   language   Language @relation(fields: [languageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@id([movieId, languageId])
   @@index([languageId])
 }
 
 model User {
-  id         String    @id @default(uuid())
-  name       String
-  email      String    @unique
-  contactNo  String?
-  password   String
-  bookings   Booking[]
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  contactNo String?
+  password  String
+  bookings  Booking[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }
 
 model Theater {
-  id       String          @id @default(uuid())
-  name     String
-  address  String
-  city     String
-  state    String
-  zipCode  String
-  country  String
-  phone    String
-  email    String
-  website  String?
-  screens  TheaterScreen[]
-  shows    Show[]
+  id      String          @id @default(uuid())
+  name    String
+  address String
+  city    String
+  state   String
+  zipCode String
+  country String
+  phone   String
+  email   String
+  website String?
+  screens TheaterScreen[]
+  shows   Show[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([city, state])
 }
 
 model TheaterScreen {
-  id           String          @id @default(uuid())
-  theaterId    String
-  screenNo     Int
-  totalSeats   Int
-  isAvailable  Boolean         @default(true)
-  theater      Theater         @relation(fields: [theaterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id             String         @id @default(uuid())
+  theaterId      String
+  screenNo       Int
+  totalSeats     Int
+  isAvailable    Boolean        @default(true)
+  theater        Theater        @relation(fields: [theaterId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   seatCategories SeatCategory[]
-  screenSeats  ScreenSeat[]
-  shows        Show[]
+  screenSeats    ScreenSeat[]
+  shows          Show[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@unique([theaterId, screenNo])
   @@index([theaterId])
 }
 
 model SeatCategory {
-  id              String       @id @default(uuid())
+  id              String        @id @default(uuid())
   name            String
   description     String?
-  additionalPrice Decimal      @default(0) @db.Decimal(10, 2)
+  additionalPrice Decimal       @default(0) @db.Decimal(10, 2)
   theaterScreenId String
   theaterScreen   TheaterScreen @relation(fields: [theaterScreenId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   seats           ScreenSeat[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([theaterScreenId])
 }
 
 model ScreenSeat {
-  id              String       @id @default(uuid())
+  id              String        @id @default(uuid())
   theaterScreenId String
   seatCategoryId  String
   rowNumber       String
@@ -128,22 +160,30 @@ model ScreenSeat {
   seatCategory    SeatCategory  @relation(fields: [seatCategoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   bookingSeats    BookingSeat[]
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@index([theaterScreenId])
   @@index([seatCategoryId])
 }
 
 model Show {
-  id              String       @id @default(uuid())
+  id              String        @id @default(uuid())
   movieId         String
   theaterId       String
   theaterScreenId String
   startTime       DateTime
   endTime         DateTime
-  basePrice       Decimal      @db.Decimal(10, 2)
-  movie           Movie        @relation(fields: [movieId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  theater         Theater      @relation(fields: [theaterId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  basePrice       Decimal       @db.Decimal(10, 2)
+  movie           Movie         @relation(fields: [movieId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  theater         Theater       @relation(fields: [theaterId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   theaterScreen   TheaterScreen @relation(fields: [theaterScreenId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   bookings        Booking[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([movieId])
   @@index([theaterId])
@@ -163,6 +203,10 @@ model Booking {
   show          Show          @relation(fields: [showId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   seats         BookingSeat[]
 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
   @@index([userId])
   @@index([showId])
 }
@@ -175,6 +219,10 @@ model BookingSeat {
   bookingStatus BookingStatus @default(RESERVED)
   booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   seat          ScreenSeat    @relation(fields: [seatId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   @@index([bookingId])
   @@index([seatId])
