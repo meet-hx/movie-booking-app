@@ -32,6 +32,21 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
     return Boolean(screenSeat);
   }
 
+  async existsByScreenAndRow(
+    theaterScreenId: string,
+    rowNumber: string,
+  ): Promise<boolean> {
+    const screenSeat = await this.prisma.screenSeat.findFirst({
+      where: {
+        theaterScreenId,
+        rowNumber,
+      },
+      select: { id: true },
+    });
+
+    return Boolean(screenSeat);
+  }
+
   async createMany(data: ScreenSeatCreateData[]): Promise<number> {
     const result = await this.prisma.screenSeat.createMany({
       data,

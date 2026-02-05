@@ -10,5 +10,9 @@ export interface ScreenSeatCreateData {
 export interface ScreenSeatRepository {
   findById(id: string): Promise<ScreenSeat | null>;
   exists(id: string): Promise<boolean>;
+  existsByScreenAndRow(
+    theaterScreenId: string,
+    rowNumber: string,
+  ): Promise<boolean>;
   createMany(data: ScreenSeatCreateData[]): Promise<number>;
 }

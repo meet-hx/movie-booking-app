@@ -46,6 +46,19 @@ export class SeatService {
       }
 
       for (const seatRow of category.seats) {
+        if (
+          await this.screenSeatRepository.existsByScreenAndRow(
+            request.theaterScreenId,
+            seatRow.rowNumber,
+          )
+        ) {
+          throw new BadRequestException(
+            Strings.screenSeat.duplicateRowNumber({
+              rowNumber: seatRow.rowNumber,
+            }),
+          );
+        }
+
         seatRows.push({
           theaterScreenId: request.theaterScreenId,
           seatCategoryId: category.categoryId,
