@@ -15,11 +15,39 @@ export interface ShowFilters {
   movieId?: string;
 }
 
+export interface ShowWithDetails {
+  startTime: Date;
+  movie: {
+    id: string;
+    title: string;
+    description: string | null;
+    duration: number;
+    type: string;
+    genre: {
+      id: string;
+      name: string;
+    } | null;
+  };
+  theater: {
+    id: string;
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+    phone: string;
+    email: string;
+    website: string | null;
+  };
+}
+
 export interface ShowRepository {
   findById(id: string): Promise<Show | null>;
   getPricingContext(showId: string, seatIds: string[]): Promise<any | null>;
   create(data: CreateShowData): Promise<Show>;
   findAll(filters: ShowFilters): Promise<Show[]>;
+  findAllWithDetails(filters: ShowFilters): Promise<ShowWithDetails[]>;
   findOverlappingShow(
     theaterScreenId: string,
     startTime: Date,

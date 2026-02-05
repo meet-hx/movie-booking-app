@@ -6,6 +6,12 @@ import {
   CreateShowResponseDto,
 } from './dto/create-show.dto';
 import { ListShowsQueryDto, ShowResponseDto } from './dto/list-shows.dto';
+import {
+  ListShowsByMovieQueryDto,
+  ListShowsByTheaterQueryDto,
+  MovieShowtimesResponseDto,
+  TheaterShowtimesResponseDto,
+} from './dto/show-availability.dto';
 
 @ApiTags('shows')
 @Controller('shows')
@@ -32,5 +38,31 @@ export class ShowController {
   })
   async listShows(@Query() query: ListShowsQueryDto) {
     return this.showService.listShows(query);
+  }
+
+  @Get('theaters')
+  @ApiOperation({
+    summary: 'List theaters with showtimes filtered by movie and date',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of theaters and their showtimes.',
+    type: [TheaterShowtimesResponseDto],
+  })
+  async listTheaters(@Query() query: ListShowsByMovieQueryDto) {
+    return this.showService.listShowsByMovie(query);
+  }
+
+  @Get('movies')
+  @ApiOperation({
+    summary: 'List movies with showtimes filtered by theater and date',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'List of movies and their showtimes.',
+    type: [MovieShowtimesResponseDto],
+  })
+  async listMovies(@Query() query: ListShowsByTheaterQueryDto) {
+    return this.showService.listShowsByTheater(query);
   }
 }
