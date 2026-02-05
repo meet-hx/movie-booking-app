@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { SeatCategoryRepository } from '../../../domain/repositories/seatCategory/seatCategory.repository';
+import {
+  SeatCategoryCreateData,
+  SeatCategoryRepository,
+} from '../../../domain/repositories/seatCategory/seatCategory.repository';
 import { SeatCategory } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
@@ -27,5 +30,18 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
     });
 
     return Boolean(seatCategory);
+  }
+
+  async create(data: SeatCategoryCreateData): Promise<SeatCategory> {
+    return this.prisma.seatCategory.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        additionalPrice: true,
+        theaterScreenId: true,
+      },
+    });
   }
 }

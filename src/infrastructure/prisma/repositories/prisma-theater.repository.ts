@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { TheaterRepository } from '../../../domain/repositories/theater/theater.repository';
+import {
+  TheaterCreateData,
+  TheaterRepository,
+  TheaterUpdateData,
+} from '../../../domain/repositories/theater/theater.repository';
 import { Theater } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
@@ -32,5 +36,63 @@ export class PrismaTheaterRepository implements TheaterRepository {
     });
 
     return Boolean(theater);
+  }
+
+  async findAll(): Promise<Theater[]> {
+    return this.prisma.theater.findMany({
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        city: true,
+        state: true,
+        zipCode: true,
+        country: true,
+        phone: true,
+        email: true,
+        website: true,
+      },
+    });
+  }
+
+  async create(data: TheaterCreateData): Promise<Theater> {
+    return this.prisma.theater.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        city: true,
+        state: true,
+        zipCode: true,
+        country: true,
+        phone: true,
+        email: true,
+        website: true,
+      },
+    });
+  }
+
+  async update(id: string, data: TheaterUpdateData): Promise<Theater> {
+    return this.prisma.theater.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        name: true,
+        address: true,
+        city: true,
+        state: true,
+        zipCode: true,
+        country: true,
+        phone: true,
+        email: true,
+        website: true,
+      },
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.theater.delete({ where: { id } });
   }
 }
