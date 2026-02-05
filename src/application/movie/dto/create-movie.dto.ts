@@ -51,7 +51,9 @@ export class CreateMovieRequestDto {
     enum: MovieType,
     example: MovieType.IMAX,
   })
-  @IsEnum(MovieType)
+  @IsEnum(MovieType, {
+    message: `type must be one of: ${Object.values(MovieType).join(', ')}`,
+  })
   type: MovieType;
 
   @ApiProperty({
@@ -59,7 +61,6 @@ export class CreateMovieRequestDto {
     example: '123e4567-e89b-12d3-a456-426614174000',
     format: 'uuid',
   })
-  @IsUUID()
   @IsNotEmpty()
   genreId: string;
 }

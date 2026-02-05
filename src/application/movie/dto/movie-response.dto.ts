@@ -50,7 +50,7 @@ export class MovieResponseDto {
   @ApiProperty({ type: GenreResponseDto })
   genre?: GenreResponseDto;
 
-  @ApiProperty({ type: [MovieLanguageResponseDto], isArray: true })
+  @ApiProperty({ type: () => MovieLanguageResponseDto, isArray: true })
   languages?: MovieLanguageResponseDto[];
 
   @ApiProperty({ example: '2024-01-15T10:30:00.000Z' })

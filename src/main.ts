@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { PrismaService } from './infrastructure/prisma/prisma.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,6 +10,13 @@ import { CommonResponseInterceptor } from './utils/common-response.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
   app.use(cookieParser());
   app.useGlobalFilters(new CommonExceptionFilter());
   app.useGlobalInterceptors(new CommonResponseInterceptor());

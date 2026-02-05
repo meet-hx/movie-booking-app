@@ -29,6 +29,9 @@ export class Strings {
   static movie = {
     notFound: 'Movie not found.',
   };
+  static genre = {
+    notFound: 'Genre not found.',
+  };
   static show = {
     notFound: 'Show not found.',
     overlap: 'Show time overlaps with an existing show on this screen.',
