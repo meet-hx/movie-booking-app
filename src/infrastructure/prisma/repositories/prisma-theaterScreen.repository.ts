@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   TheaterScreenCreateData,
   TheaterScreenRepository,
+  TheaterScreenUpdateData,
 } from '../../../domain/repositories/theaterScreen/theaterScreen.repository';
 import { TheaterScreen } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -30,6 +31,19 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
     });
 
     return Boolean(theaterScreen);
+  }
+
+  async findByTheaterId(theaterId: string): Promise<TheaterScreen[]> {
+    return this.prisma.theaterScreen.findMany({
+      where: { theaterId },
+      select: {
+        id: true,
+        theaterId: true,
+        screenNo: true,
+        totalSeats: true,
+        isAvailable: true,
+      },
+    });
   }
 
   async findByTheaterAndScreenNo(
@@ -63,6 +77,29 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         totalSeats: true,
         isAvailable: true,
       },
+    });
+  }
+
+  async update(
+    id: string,
+    data: TheaterScreenUpdateData,
+  ): Promise<TheaterScreen> {
+    return this.prisma.theaterScreen.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        theaterId: true,
+        screenNo: true,
+        totalSeats: true,
+        isAvailable: true,
+      },
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.theaterScreen.delete({
+      where: { id },
     });
   }
 }

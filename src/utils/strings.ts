@@ -15,6 +15,7 @@ export class Strings {
       `Screen ${options.screenNo} already exists for theater ${options.theaterId}.`,
   };
   static screenSeat = {
+    notFound: 'Screen seat not found.',
     duplicateRowNumber: (options: { rowNumber: string }) =>
       `Row number ${options.rowNumber} already exists in this screen.`,
   };
