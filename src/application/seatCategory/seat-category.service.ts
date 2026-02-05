@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
 import type { SeatCategoryRepository } from '../../domain/repositories/seatCategory/seatCategory.repository';
+import { Strings } from '../../utils/strings';
 
 @Injectable()
 export class SeatCategoryService {
@@ -12,7 +13,7 @@ export class SeatCategoryService {
   async findById(id: string) {
     const seatCategory = await this.seatCategoryRepository.findById(id);
     if (!seatCategory) {
-      throw new NotFoundException(`Seat category ${id} not found.`);
+      throw new NotFoundException(Strings.seatCategory.notFound({ id }));
     }
     return seatCategory;
   }

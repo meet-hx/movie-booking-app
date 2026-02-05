@@ -4,6 +4,7 @@ import { SeatCategoryService } from '../seatCategory/seat-category.service';
 import { TheaterScreenService } from '../theaterScreen/theater-screen.service';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
 import type { ScreenSeatRepository } from '../../domain/repositories/screenSeat/screenSeat.repository';
+import { Strings } from '../../utils/strings';
 
 @Injectable()
 export class SeatService {
@@ -33,7 +34,10 @@ export class SeatService {
 
       if (seatCategory.theaterScreenId !== request.theaterScreenId) {
         throw new BadRequestException(
-          `Seat category ${category.categoryId} does not belong to screen ${request.theaterScreenId}.`,
+          Strings.seatCategory.mismatch({
+            categoryId: category.categoryId,
+            theaterScreenId: request.theaterScreenId,
+          }),
         );
       }
 

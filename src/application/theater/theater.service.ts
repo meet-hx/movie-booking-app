@@ -6,6 +6,7 @@ import {
   UpdateTheaterRequestDto,
 } from './dto/create-theater.dto';
 import { TheaterScreenService } from '../theaterScreen/theater-screen.service';
+import { Strings } from '../../utils/strings';
 
 @Injectable()
 export class TheaterService {
@@ -41,7 +42,7 @@ export class TheaterService {
   async updateTheater(id: string, request: UpdateTheaterRequestDto) {
     const exists = await this.theaterRepository.exists(id);
     if (!exists) {
-      throw new NotFoundException('Theater not found.');
+      throw new NotFoundException(Strings.theater.notFound);
     }
 
     return this.theaterRepository.update(id, request);
@@ -50,7 +51,7 @@ export class TheaterService {
   async deleteTheater(id: string) {
     const exists = await this.theaterRepository.exists(id);
     if (!exists) {
-      throw new NotFoundException('Theater not found.');
+      throw new NotFoundException(Strings.theater.notFound);
     }
 
     await this.theaterRepository.delete(id);
@@ -60,7 +61,7 @@ export class TheaterService {
   async getTheater(id: string) {
     const theater = await this.theaterRepository.findById(id);
     if (!theater) {
-      throw new NotFoundException('Theater not found.');
+      throw new NotFoundException(Strings.theater.notFound);
     }
     return theater;
   }
@@ -72,7 +73,7 @@ export class TheaterService {
   async ensureExists(id: string) {
     const exists = await this.theaterRepository.exists(id);
     if (!exists) {
-      throw new NotFoundException('Theater not found.');
+      throw new NotFoundException(Strings.theater.notFound);
     }
   }
 }
