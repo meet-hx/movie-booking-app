@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ShowRepository } from '../../../domain/repositories/show/show.repository';
+import {
+  ShowRepository,
+  CreateShowData,
+  ShowFilters,
+} from '../../../domain/repositories/show/show.repository';
 import { Show } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
@@ -70,5 +74,68 @@ export class PrismaShowRepository implements ShowRepository {
         additionalPrice: seat.seatCategory.additionalPrice.toNumber(),
       })),
     };
+  }
+
+  async create(data: CreateShowData): Promise<Show> {
+    return this.prisma.show.create({
+      data: {
+        movieId: data.movieId,
+        theaterId: data.theaterId,
+        theaterScreenId: data.theaterScreenId,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        basePrice: data.basePrice,
+      },
+    });
+  }
+
+  async findAll(filters: ShowFilters): Promise<Show[]> {
+    const where: any = {};
+
+    if (filters.theaterId) {
+      where.theaterId = filters.theaterId;
+    }
+
+    if (filters.movieId) {
+      where.movieId = filters.movieId;
+    }
+
+    if (filters.date) {
+      const startOfDay = new Date(filters.date);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(filters.date);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      where.startTime = {
+        gte: startOfDay,
+        lte: endOfDay,
+      };
+    }
+
+    return this.prisma.show.findMany({
+      where,
+      orderBy: {
+        startTime: 'asc',
+      },
+    });
+  }
+
+  async findOverlappingShow(
+    theaterScreenId: string,
+    startTime: Date,
+    endTime: Date,
+  ): Promise<Show | null> {
+    return this.prisma.show.findFirst({
+      where: {
+        theaterScreenId,
+        startTime: {
+          lt: endTime,
+        },
+        endTime: {
+          gt: startTime,
+        },
+      },
+    });
   }
 }

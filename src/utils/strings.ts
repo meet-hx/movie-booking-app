@@ -13,6 +13,7 @@ export class Strings {
       `Duplicate screenNo ${options.screenNo} in request.`,
     screenAlreadyExists: (options: { screenNo: number; theaterId: string }) =>
       `Screen ${options.screenNo} already exists for theater ${options.theaterId}.`,
+    mismatch: 'Theater Screen does not belong to the specified Theater.',
   };
   static screenSeat = {
     notFound: 'Screen seat not found.',
@@ -24,5 +25,13 @@ export class Strings {
       `Seat category ${options.id} not found.`,
     mismatch: (options: { categoryId: string; theaterScreenId: string }) =>
       `Seat category ${options.categoryId} does not belong to screen ${options.theaterScreenId}.`,
+  };
+  static movie = {
+    notFound: 'Movie not found.',
+  };
+  static show = {
+    notFound: 'Show not found.',
+    overlap: 'Show time overlaps with an existing show on this screen.',
+    invalidTime: 'Start time must be before end time.',
   };
 }

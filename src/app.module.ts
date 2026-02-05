@@ -9,6 +9,7 @@ import { UserModule } from './application/user/user.module';
 import { TheaterModule } from './application/theater/theater.module';
 import { TheaterScreenModule } from './application/theaterScreen/theater-screen.module';
 import { SeatModule } from './application/seat/seat.module';
+import { MovieModule } from './application/movie/movie.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { SeatModule } from './application/seat/seat.module';
     TheaterModule,
     TheaterScreenModule,
     SeatModule,
+    MovieModule,
   ],
   controllers: [AppController],
   providers: [AppService],
