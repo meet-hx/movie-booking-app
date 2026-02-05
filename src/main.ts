@@ -3,11 +3,15 @@ import { AppModule } from './app.module';
 import { PrismaService } from './infrastructure/prisma/prisma.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { CommonExceptionFilter } from './utils/common-exception.filter';
+import { CommonResponseInterceptor } from './utils/common-response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  app.useGlobalFilters(new CommonExceptionFilter());
+  app.useGlobalInterceptors(new CommonResponseInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('Book your show')
