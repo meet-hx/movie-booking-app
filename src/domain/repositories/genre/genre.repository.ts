@@ -1,4 +1,4 @@
-import { Genre } from '@prisma/client';
+import { Genre } from 'src/generated/prisma/client';
 
 export interface GenreRepository {
   findById(id: string): Promise<Genre | null>;

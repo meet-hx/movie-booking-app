@@ -4,7 +4,7 @@ import {
   ScreenSeatRepository,
   ScreenSeatUpdateData,
 } from '../../../domain/repositories/screenSeat/screenSeat.repository';
-import { ScreenSeat } from '@prisma/client';
+import { ScreenSeat } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -20,6 +20,9 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
         seatCategoryId: true,
         rowNumber: true,
         seatNumbers: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -33,9 +36,7 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
     return Boolean(screenSeat);
   }
 
-  async findByTheaterScreenId(
-    theaterScreenId: string,
-  ): Promise<ScreenSeat[]> {
+  async findByTheaterScreenId(theaterScreenId: string): Promise<ScreenSeat[]> {
     return this.prisma.screenSeat.findMany({
       where: { theaterScreenId },
       select: {
@@ -44,6 +45,9 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
         seatCategoryId: true,
         rowNumber: true,
         seatNumbers: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -81,6 +85,9 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
         seatCategoryId: true,
         rowNumber: true,
         seatNumbers: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

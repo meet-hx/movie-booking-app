@@ -4,7 +4,7 @@ import {
   CreateShowData,
   ShowFilters,
 } from '../../../domain/repositories/show/show.repository';
-import { Show } from '@prisma/client';
+import { Show } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -22,6 +22,9 @@ export class PrismaShowRepository implements ShowRepository {
         startTime: true,
         endTime: true,
         basePrice: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
 

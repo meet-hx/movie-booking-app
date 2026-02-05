@@ -87,7 +87,10 @@ export const MovieScalarFieldEnum = {
   description: 'description',
   duration: 'duration',
   type: 'type',
-  genreId: 'genreId'
+  genreId: 'genreId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type MovieScalarFieldEnum = (typeof MovieScalarFieldEnum)[keyof typeof MovieScalarFieldEnum]
@@ -95,7 +98,10 @@ export type MovieScalarFieldEnum = (typeof MovieScalarFieldEnum)[keyof typeof Mo
 
 export const GenreScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type GenreScalarFieldEnum = (typeof GenreScalarFieldEnum)[keyof typeof GenreScalarFieldEnum]
@@ -103,7 +109,10 @@ export type GenreScalarFieldEnum = (typeof GenreScalarFieldEnum)[keyof typeof Ge
 
 export const LanguageScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type LanguageScalarFieldEnum = (typeof LanguageScalarFieldEnum)[keyof typeof LanguageScalarFieldEnum]
@@ -111,7 +120,10 @@ export type LanguageScalarFieldEnum = (typeof LanguageScalarFieldEnum)[keyof typ
 
 export const MovieLanguageScalarFieldEnum = {
   movieId: 'movieId',
-  languageId: 'languageId'
+  languageId: 'languageId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type MovieLanguageScalarFieldEnum = (typeof MovieLanguageScalarFieldEnum)[keyof typeof MovieLanguageScalarFieldEnum]
@@ -122,7 +134,10 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   contactNo: 'contactNo',
-  password: 'password'
+  password: 'password',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -138,7 +153,10 @@ export const TheaterScalarFieldEnum = {
   country: 'country',
   phone: 'phone',
   email: 'email',
-  website: 'website'
+  website: 'website',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TheaterScalarFieldEnum = (typeof TheaterScalarFieldEnum)[keyof typeof TheaterScalarFieldEnum]
@@ -149,7 +167,10 @@ export const TheaterScreenScalarFieldEnum = {
   theaterId: 'theaterId',
   screenNo: 'screenNo',
   totalSeats: 'totalSeats',
-  isAvailable: 'isAvailable'
+  isAvailable: 'isAvailable',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type TheaterScreenScalarFieldEnum = (typeof TheaterScreenScalarFieldEnum)[keyof typeof TheaterScreenScalarFieldEnum]
@@ -160,7 +181,10 @@ export const SeatCategoryScalarFieldEnum = {
   name: 'name',
   description: 'description',
   additionalPrice: 'additionalPrice',
-  theaterScreenId: 'theaterScreenId'
+  theaterScreenId: 'theaterScreenId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type SeatCategoryScalarFieldEnum = (typeof SeatCategoryScalarFieldEnum)[keyof typeof SeatCategoryScalarFieldEnum]
@@ -171,7 +195,10 @@ export const ScreenSeatScalarFieldEnum = {
   theaterScreenId: 'theaterScreenId',
   seatCategoryId: 'seatCategoryId',
   rowNumber: 'rowNumber',
-  seatNumbers: 'seatNumbers'
+  seatNumbers: 'seatNumbers',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ScreenSeatScalarFieldEnum = (typeof ScreenSeatScalarFieldEnum)[keyof typeof ScreenSeatScalarFieldEnum]
@@ -184,7 +211,10 @@ export const ShowScalarFieldEnum = {
   theaterScreenId: 'theaterScreenId',
   startTime: 'startTime',
   endTime: 'endTime',
-  basePrice: 'basePrice'
+  basePrice: 'basePrice',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type ShowScalarFieldEnum = (typeof ShowScalarFieldEnum)[keyof typeof ShowScalarFieldEnum]
@@ -197,7 +227,10 @@ export const BookingScalarFieldEnum = {
   bookingTime: 'bookingTime',
   totalAmount: 'totalAmount',
   serviceCharge: 'serviceCharge',
-  paymentStatus: 'paymentStatus'
+  paymentStatus: 'paymentStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
@@ -208,7 +241,10 @@ export const BookingSeatScalarFieldEnum = {
   bookingId: 'bookingId',
   seatId: 'seatId',
   amount: 'amount',
-  bookingStatus: 'bookingStatus'
+  bookingStatus: 'bookingStatus',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
 } as const
 
 export type BookingSeatScalarFieldEnum = (typeof BookingSeatScalarFieldEnum)[keyof typeof BookingSeatScalarFieldEnum]

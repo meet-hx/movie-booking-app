@@ -1,4 +1,4 @@
-import { SeatCategory } from '@prisma/client';
+import { SeatCategory } from 'src/generated/prisma/client';
 
 export interface SeatCategoryCreateData {
   name: string;

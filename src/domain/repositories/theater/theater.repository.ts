@@ -1,4 +1,4 @@
-import { Theater } from '@prisma/client';
+import { Theater } from 'src/generated/prisma/client';
 
 export interface TheaterCreateData {
   name: string;

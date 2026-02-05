@@ -4,7 +4,7 @@ import {
   TheaterScreenRepository,
   TheaterScreenUpdateData,
 } from '../../../domain/repositories/theaterScreen/theaterScreen.repository';
-import { TheaterScreen } from '@prisma/client';
+import { TheaterScreen } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -20,6 +20,9 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         screenNo: true,
         totalSeats: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -42,6 +45,9 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         screenNo: true,
         totalSeats: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -63,6 +69,9 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         screenNo: true,
         totalSeats: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -76,6 +85,9 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         screenNo: true,
         totalSeats: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -93,6 +105,9 @@ export class PrismaTheaterScreenRepository implements TheaterScreenRepository {
         screenNo: true,
         totalSeats: true,
         isAvailable: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

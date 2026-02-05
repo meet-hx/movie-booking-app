@@ -4,7 +4,7 @@ import {
   TheaterRepository,
   TheaterUpdateData,
 } from '../../../domain/repositories/theater/theater.repository';
-import { Theater } from '@prisma/client';
+import { Theater } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -25,6 +25,9 @@ export class PrismaTheaterRepository implements TheaterRepository {
         phone: true,
         email: true,
         website: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -51,6 +54,9 @@ export class PrismaTheaterRepository implements TheaterRepository {
         phone: true,
         email: true,
         website: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -69,6 +75,9 @@ export class PrismaTheaterRepository implements TheaterRepository {
         phone: true,
         email: true,
         website: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -88,6 +97,9 @@ export class PrismaTheaterRepository implements TheaterRepository {
         phone: true,
         email: true,
         website: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

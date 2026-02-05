@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsUUID, IsOptional, IsDateString } from 'class-validator';
-import { Show } from '@prisma/client';
+import { Show } from 'src/generated/prisma/client';
 
 export class ListShowsQueryDto {
   @ApiProperty({

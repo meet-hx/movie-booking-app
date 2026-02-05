@@ -41,6 +41,9 @@ export type MovieMinAggregateOutputType = {
   duration: number | null
   type: $Enums.MovieType | null
   genreId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type MovieMaxAggregateOutputType = {
@@ -50,6 +53,9 @@ export type MovieMaxAggregateOutputType = {
   duration: number | null
   type: $Enums.MovieType | null
   genreId: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type MovieCountAggregateOutputType = {
@@ -59,6 +65,9 @@ export type MovieCountAggregateOutputType = {
   duration: number
   type: number
   genreId: number
+  createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -78,6 +87,9 @@ export type MovieMinAggregateInputType = {
   duration?: true
   type?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type MovieMaxAggregateInputType = {
@@ -87,6 +99,9 @@ export type MovieMaxAggregateInputType = {
   duration?: true
   type?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type MovieCountAggregateInputType = {
@@ -96,6 +111,9 @@ export type MovieCountAggregateInputType = {
   duration?: true
   type?: true
   genreId?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -192,6 +210,9 @@ export type MovieGroupByOutputType = {
   duration: number
   type: $Enums.MovieType
   genreId: string
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: MovieCountAggregateOutputType | null
   _avg: MovieAvgAggregateOutputType | null
   _sum: MovieSumAggregateOutputType | null
@@ -224,6 +245,9 @@ export type MovieWhereInput = {
   duration?: Prisma.IntFilter<"Movie"> | number
   type?: Prisma.EnumMovieTypeFilter<"Movie"> | $Enums.MovieType
   genreId?: Prisma.StringFilter<"Movie"> | string
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Movie"> | Date | string | null
   genre?: Prisma.XOR<Prisma.GenreScalarRelationFilter, Prisma.GenreWhereInput>
   languages?: Prisma.MovieLanguageListRelationFilter
   shows?: Prisma.ShowListRelationFilter
@@ -236,6 +260,9 @@ export type MovieOrderByWithRelationInput = {
   duration?: Prisma.SortOrder
   type?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   genre?: Prisma.GenreOrderByWithRelationInput
   languages?: Prisma.MovieLanguageOrderByRelationAggregateInput
   shows?: Prisma.ShowOrderByRelationAggregateInput
@@ -251,6 +278,9 @@ export type MovieWhereUniqueInput = Prisma.AtLeast<{
   duration?: Prisma.IntFilter<"Movie"> | number
   type?: Prisma.EnumMovieTypeFilter<"Movie"> | $Enums.MovieType
   genreId?: Prisma.StringFilter<"Movie"> | string
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Movie"> | Date | string | null
   genre?: Prisma.XOR<Prisma.GenreScalarRelationFilter, Prisma.GenreWhereInput>
   languages?: Prisma.MovieLanguageListRelationFilter
   shows?: Prisma.ShowListRelationFilter
@@ -263,6 +293,9 @@ export type MovieOrderByWithAggregationInput = {
   duration?: Prisma.SortOrder
   type?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MovieCountOrderByAggregateInput
   _avg?: Prisma.MovieAvgOrderByAggregateInput
   _max?: Prisma.MovieMaxOrderByAggregateInput
@@ -280,6 +313,9 @@ export type MovieScalarWhereWithAggregatesInput = {
   duration?: Prisma.IntWithAggregatesFilter<"Movie"> | number
   type?: Prisma.EnumMovieTypeWithAggregatesFilter<"Movie"> | $Enums.MovieType
   genreId?: Prisma.StringWithAggregatesFilter<"Movie"> | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Movie"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Movie"> | Date | string | null
 }
 
 export type MovieCreateInput = {
@@ -288,6 +324,9 @@ export type MovieCreateInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   genre: Prisma.GenreCreateNestedOneWithoutMoviesInput
   languages?: Prisma.MovieLanguageCreateNestedManyWithoutMovieInput
   shows?: Prisma.ShowCreateNestedManyWithoutMovieInput
@@ -300,6 +339,9 @@ export type MovieUncheckedCreateInput = {
   duration: number
   type: $Enums.MovieType
   genreId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   languages?: Prisma.MovieLanguageUncheckedCreateNestedManyWithoutMovieInput
   shows?: Prisma.ShowUncheckedCreateNestedManyWithoutMovieInput
 }
@@ -310,6 +352,9 @@ export type MovieUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   genre?: Prisma.GenreUpdateOneRequiredWithoutMoviesNestedInput
   languages?: Prisma.MovieLanguageUpdateManyWithoutMovieNestedInput
   shows?: Prisma.ShowUpdateManyWithoutMovieNestedInput
@@ -322,6 +367,9 @@ export type MovieUncheckedUpdateInput = {
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
   genreId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   languages?: Prisma.MovieLanguageUncheckedUpdateManyWithoutMovieNestedInput
   shows?: Prisma.ShowUncheckedUpdateManyWithoutMovieNestedInput
 }
@@ -333,6 +381,9 @@ export type MovieCreateManyInput = {
   duration: number
   type: $Enums.MovieType
   genreId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type MovieUpdateManyMutationInput = {
@@ -341,6 +392,9 @@ export type MovieUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MovieUncheckedUpdateManyInput = {
@@ -350,6 +404,9 @@ export type MovieUncheckedUpdateManyInput = {
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
   genreId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MovieCountOrderByAggregateInput = {
@@ -359,6 +416,9 @@ export type MovieCountOrderByAggregateInput = {
   duration?: Prisma.SortOrder
   type?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MovieAvgOrderByAggregateInput = {
@@ -372,6 +432,9 @@ export type MovieMaxOrderByAggregateInput = {
   duration?: Prisma.SortOrder
   type?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MovieMinOrderByAggregateInput = {
@@ -381,6 +444,9 @@ export type MovieMinOrderByAggregateInput = {
   duration?: Prisma.SortOrder
   type?: Prisma.SortOrder
   genreId?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type MovieSumOrderByAggregateInput = {
@@ -420,6 +486,14 @@ export type IntFieldUpdateOperationsInput = {
 
 export type EnumMovieTypeFieldUpdateOperationsInput = {
   set?: $Enums.MovieType
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type MovieCreateNestedManyWithoutGenreInput = {
@@ -498,6 +572,9 @@ export type MovieCreateWithoutGenreInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   languages?: Prisma.MovieLanguageCreateNestedManyWithoutMovieInput
   shows?: Prisma.ShowCreateNestedManyWithoutMovieInput
 }
@@ -508,6 +585,9 @@ export type MovieUncheckedCreateWithoutGenreInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   languages?: Prisma.MovieLanguageUncheckedCreateNestedManyWithoutMovieInput
   shows?: Prisma.ShowUncheckedCreateNestedManyWithoutMovieInput
 }
@@ -548,6 +628,9 @@ export type MovieScalarWhereInput = {
   duration?: Prisma.IntFilter<"Movie"> | number
   type?: Prisma.EnumMovieTypeFilter<"Movie"> | $Enums.MovieType
   genreId?: Prisma.StringFilter<"Movie"> | string
+  createdAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Movie"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Movie"> | Date | string | null
 }
 
 export type MovieCreateWithoutLanguagesInput = {
@@ -556,6 +639,9 @@ export type MovieCreateWithoutLanguagesInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   genre: Prisma.GenreCreateNestedOneWithoutMoviesInput
   shows?: Prisma.ShowCreateNestedManyWithoutMovieInput
 }
@@ -567,6 +653,9 @@ export type MovieUncheckedCreateWithoutLanguagesInput = {
   duration: number
   type: $Enums.MovieType
   genreId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   shows?: Prisma.ShowUncheckedCreateNestedManyWithoutMovieInput
 }
 
@@ -592,6 +681,9 @@ export type MovieUpdateWithoutLanguagesInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   genre?: Prisma.GenreUpdateOneRequiredWithoutMoviesNestedInput
   shows?: Prisma.ShowUpdateManyWithoutMovieNestedInput
 }
@@ -603,6 +695,9 @@ export type MovieUncheckedUpdateWithoutLanguagesInput = {
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
   genreId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   shows?: Prisma.ShowUncheckedUpdateManyWithoutMovieNestedInput
 }
 
@@ -612,6 +707,9 @@ export type MovieCreateWithoutShowsInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   genre: Prisma.GenreCreateNestedOneWithoutMoviesInput
   languages?: Prisma.MovieLanguageCreateNestedManyWithoutMovieInput
 }
@@ -623,6 +721,9 @@ export type MovieUncheckedCreateWithoutShowsInput = {
   duration: number
   type: $Enums.MovieType
   genreId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   languages?: Prisma.MovieLanguageUncheckedCreateNestedManyWithoutMovieInput
 }
 
@@ -648,6 +749,9 @@ export type MovieUpdateWithoutShowsInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   genre?: Prisma.GenreUpdateOneRequiredWithoutMoviesNestedInput
   languages?: Prisma.MovieLanguageUpdateManyWithoutMovieNestedInput
 }
@@ -659,6 +763,9 @@ export type MovieUncheckedUpdateWithoutShowsInput = {
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
   genreId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   languages?: Prisma.MovieLanguageUncheckedUpdateManyWithoutMovieNestedInput
 }
 
@@ -668,6 +775,9 @@ export type MovieCreateManyGenreInput = {
   description?: string | null
   duration: number
   type: $Enums.MovieType
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type MovieUpdateWithoutGenreInput = {
@@ -676,6 +786,9 @@ export type MovieUpdateWithoutGenreInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   languages?: Prisma.MovieLanguageUpdateManyWithoutMovieNestedInput
   shows?: Prisma.ShowUpdateManyWithoutMovieNestedInput
 }
@@ -686,6 +799,9 @@ export type MovieUncheckedUpdateWithoutGenreInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   languages?: Prisma.MovieLanguageUncheckedUpdateManyWithoutMovieNestedInput
   shows?: Prisma.ShowUncheckedUpdateManyWithoutMovieNestedInput
 }
@@ -696,6 +812,9 @@ export type MovieUncheckedUpdateManyWithoutGenreInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.EnumMovieTypeFieldUpdateOperationsInput | $Enums.MovieType
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -745,6 +864,9 @@ export type MovieSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   duration?: boolean
   type?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   genre?: boolean | Prisma.GenreDefaultArgs<ExtArgs>
   languages?: boolean | Prisma.Movie$languagesArgs<ExtArgs>
   shows?: boolean | Prisma.Movie$showsArgs<ExtArgs>
@@ -758,6 +880,9 @@ export type MovieSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   duration?: boolean
   type?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   genre?: boolean | Prisma.GenreDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
@@ -768,6 +893,9 @@ export type MovieSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   duration?: boolean
   type?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   genre?: boolean | Prisma.GenreDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["movie"]>
 
@@ -778,9 +906,12 @@ export type MovieSelectScalar = {
   duration?: boolean
   type?: boolean
   genreId?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "duration" | "type" | "genreId", ExtArgs["result"]["movie"]>
+export type MovieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "duration" | "type" | "genreId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["movie"]>
 export type MovieInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   genre?: boolean | Prisma.GenreDefaultArgs<ExtArgs>
   languages?: boolean | Prisma.Movie$languagesArgs<ExtArgs>
@@ -808,6 +939,9 @@ export type $MoviePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     duration: number
     type: $Enums.MovieType
     genreId: string
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["movie"]>
   composites: {}
 }
@@ -1240,6 +1374,9 @@ export interface MovieFieldRefs {
   readonly duration: Prisma.FieldRef<"Movie", 'Int'>
   readonly type: Prisma.FieldRef<"Movie", 'MovieType'>
   readonly genreId: Prisma.FieldRef<"Movie", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Movie", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Movie", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Movie", 'DateTime'>
 }
     
 

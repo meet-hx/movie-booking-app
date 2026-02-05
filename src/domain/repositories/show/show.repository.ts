@@ -1,4 +1,4 @@
-import { Show } from '@prisma/client';
+import { Show } from 'src/generated/prisma/client';
 
 export interface CreateShowData {
   movieId: string;

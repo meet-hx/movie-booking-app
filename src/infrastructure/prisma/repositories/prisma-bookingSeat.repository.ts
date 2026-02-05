@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { BookingSeatRepository } from '../../../domain/repositories/bookingSeat/bookingSeat.repository';
-import { BookingSeat } from '@prisma/client';
+import { BookingSeat } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -16,6 +16,9 @@ export class PrismaBookingSeatRepository implements BookingSeatRepository {
         seatId: true,
         amount: true,
         bookingStatus: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User } from 'src/generated/prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDtoRequest {

@@ -42,6 +42,9 @@ export type ShowMinAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   basePrice: runtime.Decimal | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ShowMaxAggregateOutputType = {
@@ -52,6 +55,9 @@ export type ShowMaxAggregateOutputType = {
   startTime: Date | null
   endTime: Date | null
   basePrice: runtime.Decimal | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type ShowCountAggregateOutputType = {
@@ -62,6 +68,9 @@ export type ShowCountAggregateOutputType = {
   startTime: number
   endTime: number
   basePrice: number
+  createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -82,6 +91,9 @@ export type ShowMinAggregateInputType = {
   startTime?: true
   endTime?: true
   basePrice?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type ShowMaxAggregateInputType = {
@@ -92,6 +104,9 @@ export type ShowMaxAggregateInputType = {
   startTime?: true
   endTime?: true
   basePrice?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type ShowCountAggregateInputType = {
@@ -102,6 +117,9 @@ export type ShowCountAggregateInputType = {
   startTime?: true
   endTime?: true
   basePrice?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -199,6 +217,9 @@ export type ShowGroupByOutputType = {
   startTime: Date
   endTime: Date
   basePrice: runtime.Decimal
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: ShowCountAggregateOutputType | null
   _avg: ShowAvgAggregateOutputType | null
   _sum: ShowSumAggregateOutputType | null
@@ -232,6 +253,9 @@ export type ShowWhereInput = {
   startTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   basePrice?: Prisma.DecimalFilter<"Show"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Show"> | Date | string | null
   movie?: Prisma.XOR<Prisma.MovieScalarRelationFilter, Prisma.MovieWhereInput>
   theater?: Prisma.XOR<Prisma.TheaterScalarRelationFilter, Prisma.TheaterWhereInput>
   theaterScreen?: Prisma.XOR<Prisma.TheaterScreenScalarRelationFilter, Prisma.TheaterScreenWhereInput>
@@ -246,6 +270,9 @@ export type ShowOrderByWithRelationInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   movie?: Prisma.MovieOrderByWithRelationInput
   theater?: Prisma.TheaterOrderByWithRelationInput
   theaterScreen?: Prisma.TheaterScreenOrderByWithRelationInput
@@ -263,6 +290,9 @@ export type ShowWhereUniqueInput = Prisma.AtLeast<{
   startTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   basePrice?: Prisma.DecimalFilter<"Show"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Show"> | Date | string | null
   movie?: Prisma.XOR<Prisma.MovieScalarRelationFilter, Prisma.MovieWhereInput>
   theater?: Prisma.XOR<Prisma.TheaterScalarRelationFilter, Prisma.TheaterWhereInput>
   theaterScreen?: Prisma.XOR<Prisma.TheaterScreenScalarRelationFilter, Prisma.TheaterScreenWhereInput>
@@ -277,6 +307,9 @@ export type ShowOrderByWithAggregationInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ShowCountOrderByAggregateInput
   _avg?: Prisma.ShowAvgOrderByAggregateInput
   _max?: Prisma.ShowMaxOrderByAggregateInput
@@ -295,6 +328,9 @@ export type ShowScalarWhereWithAggregatesInput = {
   startTime?: Prisma.DateTimeWithAggregatesFilter<"Show"> | Date | string
   endTime?: Prisma.DateTimeWithAggregatesFilter<"Show"> | Date | string
   basePrice?: Prisma.DecimalWithAggregatesFilter<"Show"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Show"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Show"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Show"> | Date | string | null
 }
 
 export type ShowCreateInput = {
@@ -302,6 +338,9 @@ export type ShowCreateInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   movie: Prisma.MovieCreateNestedOneWithoutShowsInput
   theater: Prisma.TheaterCreateNestedOneWithoutShowsInput
   theaterScreen: Prisma.TheaterScreenCreateNestedOneWithoutShowsInput
@@ -316,6 +355,9 @@ export type ShowUncheckedCreateInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutShowInput
 }
 
@@ -324,6 +366,9 @@ export type ShowUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   movie?: Prisma.MovieUpdateOneRequiredWithoutShowsNestedInput
   theater?: Prisma.TheaterUpdateOneRequiredWithoutShowsNestedInput
   theaterScreen?: Prisma.TheaterScreenUpdateOneRequiredWithoutShowsNestedInput
@@ -338,6 +383,9 @@ export type ShowUncheckedUpdateInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutShowNestedInput
 }
 
@@ -349,6 +397,9 @@ export type ShowCreateManyInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ShowUpdateManyMutationInput = {
@@ -356,6 +407,9 @@ export type ShowUpdateManyMutationInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ShowUncheckedUpdateManyInput = {
@@ -366,6 +420,9 @@ export type ShowUncheckedUpdateManyInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ShowListRelationFilter = {
@@ -386,6 +443,9 @@ export type ShowCountOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ShowAvgOrderByAggregateInput = {
@@ -400,6 +460,9 @@ export type ShowMaxOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ShowMinOrderByAggregateInput = {
@@ -410,6 +473,9 @@ export type ShowMinOrderByAggregateInput = {
   startTime?: Prisma.SortOrder
   endTime?: Prisma.SortOrder
   basePrice?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type ShowSumOrderByAggregateInput = {
@@ -547,10 +613,6 @@ export type ShowUncheckedUpdateManyWithoutTheaterScreenNestedInput = {
   deleteMany?: Prisma.ShowScalarWhereInput | Prisma.ShowScalarWhereInput[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type ShowCreateNestedOneWithoutBookingsInput = {
   create?: Prisma.XOR<Prisma.ShowCreateWithoutBookingsInput, Prisma.ShowUncheckedCreateWithoutBookingsInput>
   connectOrCreate?: Prisma.ShowCreateOrConnectWithoutBookingsInput
@@ -570,6 +632,9 @@ export type ShowCreateWithoutMovieInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   theater: Prisma.TheaterCreateNestedOneWithoutShowsInput
   theaterScreen: Prisma.TheaterScreenCreateNestedOneWithoutShowsInput
   bookings?: Prisma.BookingCreateNestedManyWithoutShowInput
@@ -582,6 +647,9 @@ export type ShowUncheckedCreateWithoutMovieInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutShowInput
 }
 
@@ -622,6 +690,9 @@ export type ShowScalarWhereInput = {
   startTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   endTime?: Prisma.DateTimeFilter<"Show"> | Date | string
   basePrice?: Prisma.DecimalFilter<"Show"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Show"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Show"> | Date | string | null
 }
 
 export type ShowCreateWithoutTheaterInput = {
@@ -629,6 +700,9 @@ export type ShowCreateWithoutTheaterInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   movie: Prisma.MovieCreateNestedOneWithoutShowsInput
   theaterScreen: Prisma.TheaterScreenCreateNestedOneWithoutShowsInput
   bookings?: Prisma.BookingCreateNestedManyWithoutShowInput
@@ -641,6 +715,9 @@ export type ShowUncheckedCreateWithoutTheaterInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutShowInput
 }
 
@@ -675,6 +752,9 @@ export type ShowCreateWithoutTheaterScreenInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   movie: Prisma.MovieCreateNestedOneWithoutShowsInput
   theater: Prisma.TheaterCreateNestedOneWithoutShowsInput
   bookings?: Prisma.BookingCreateNestedManyWithoutShowInput
@@ -687,6 +767,9 @@ export type ShowUncheckedCreateWithoutTheaterScreenInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutShowInput
 }
 
@@ -721,6 +804,9 @@ export type ShowCreateWithoutBookingsInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   movie: Prisma.MovieCreateNestedOneWithoutShowsInput
   theater: Prisma.TheaterCreateNestedOneWithoutShowsInput
   theaterScreen: Prisma.TheaterScreenCreateNestedOneWithoutShowsInput
@@ -734,6 +820,9 @@ export type ShowUncheckedCreateWithoutBookingsInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ShowCreateOrConnectWithoutBookingsInput = {
@@ -757,6 +846,9 @@ export type ShowUpdateWithoutBookingsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   movie?: Prisma.MovieUpdateOneRequiredWithoutShowsNestedInput
   theater?: Prisma.TheaterUpdateOneRequiredWithoutShowsNestedInput
   theaterScreen?: Prisma.TheaterScreenUpdateOneRequiredWithoutShowsNestedInput
@@ -770,6 +862,9 @@ export type ShowUncheckedUpdateWithoutBookingsInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ShowCreateManyMovieInput = {
@@ -779,6 +874,9 @@ export type ShowCreateManyMovieInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ShowUpdateWithoutMovieInput = {
@@ -786,6 +884,9 @@ export type ShowUpdateWithoutMovieInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   theater?: Prisma.TheaterUpdateOneRequiredWithoutShowsNestedInput
   theaterScreen?: Prisma.TheaterScreenUpdateOneRequiredWithoutShowsNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutShowNestedInput
@@ -798,6 +899,9 @@ export type ShowUncheckedUpdateWithoutMovieInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutShowNestedInput
 }
 
@@ -808,6 +912,9 @@ export type ShowUncheckedUpdateManyWithoutMovieInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ShowCreateManyTheaterInput = {
@@ -817,6 +924,9 @@ export type ShowCreateManyTheaterInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ShowUpdateWithoutTheaterInput = {
@@ -824,6 +934,9 @@ export type ShowUpdateWithoutTheaterInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   movie?: Prisma.MovieUpdateOneRequiredWithoutShowsNestedInput
   theaterScreen?: Prisma.TheaterScreenUpdateOneRequiredWithoutShowsNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutShowNestedInput
@@ -836,6 +949,9 @@ export type ShowUncheckedUpdateWithoutTheaterInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutShowNestedInput
 }
 
@@ -846,6 +962,9 @@ export type ShowUncheckedUpdateManyWithoutTheaterInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ShowCreateManyTheaterScreenInput = {
@@ -855,6 +974,9 @@ export type ShowCreateManyTheaterScreenInput = {
   startTime: Date | string
   endTime: Date | string
   basePrice: runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type ShowUpdateWithoutTheaterScreenInput = {
@@ -862,6 +984,9 @@ export type ShowUpdateWithoutTheaterScreenInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   movie?: Prisma.MovieUpdateOneRequiredWithoutShowsNestedInput
   theater?: Prisma.TheaterUpdateOneRequiredWithoutShowsNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutShowNestedInput
@@ -874,6 +999,9 @@ export type ShowUncheckedUpdateWithoutTheaterScreenInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutShowNestedInput
 }
 
@@ -884,6 +1012,9 @@ export type ShowUncheckedUpdateManyWithoutTheaterScreenInput = {
   startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   basePrice?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -925,6 +1056,9 @@ export type ShowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   startTime?: boolean
   endTime?: boolean
   basePrice?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   movie?: boolean | Prisma.MovieDefaultArgs<ExtArgs>
   theater?: boolean | Prisma.TheaterDefaultArgs<ExtArgs>
   theaterScreen?: boolean | Prisma.TheaterScreenDefaultArgs<ExtArgs>
@@ -940,6 +1074,9 @@ export type ShowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startTime?: boolean
   endTime?: boolean
   basePrice?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   movie?: boolean | Prisma.MovieDefaultArgs<ExtArgs>
   theater?: boolean | Prisma.TheaterDefaultArgs<ExtArgs>
   theaterScreen?: boolean | Prisma.TheaterScreenDefaultArgs<ExtArgs>
@@ -953,6 +1090,9 @@ export type ShowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   startTime?: boolean
   endTime?: boolean
   basePrice?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   movie?: boolean | Prisma.MovieDefaultArgs<ExtArgs>
   theater?: boolean | Prisma.TheaterDefaultArgs<ExtArgs>
   theaterScreen?: boolean | Prisma.TheaterScreenDefaultArgs<ExtArgs>
@@ -966,9 +1106,12 @@ export type ShowSelectScalar = {
   startTime?: boolean
   endTime?: boolean
   basePrice?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type ShowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "movieId" | "theaterId" | "theaterScreenId" | "startTime" | "endTime" | "basePrice", ExtArgs["result"]["show"]>
+export type ShowOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "movieId" | "theaterId" | "theaterScreenId" | "startTime" | "endTime" | "basePrice" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["show"]>
 export type ShowInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   movie?: boolean | Prisma.MovieDefaultArgs<ExtArgs>
   theater?: boolean | Prisma.TheaterDefaultArgs<ExtArgs>
@@ -1003,6 +1146,9 @@ export type $ShowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     startTime: Date
     endTime: Date
     basePrice: runtime.Decimal
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["show"]>
   composites: {}
 }
@@ -1437,6 +1583,9 @@ export interface ShowFieldRefs {
   readonly startTime: Prisma.FieldRef<"Show", 'DateTime'>
   readonly endTime: Prisma.FieldRef<"Show", 'DateTime'>
   readonly basePrice: Prisma.FieldRef<"Show", 'Decimal'>
+  readonly createdAt: Prisma.FieldRef<"Show", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Show", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Show", 'DateTime'>
 }
     
 

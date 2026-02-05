@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GenreRepository } from '../../../domain/repositories/genre/genre.repository';
-import { Genre } from '@prisma/client';
+import { Genre } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -13,6 +13,9 @@ export class PrismaGenreRepository implements GenreRepository {
       select: {
         id: true,
         name: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

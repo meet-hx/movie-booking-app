@@ -1,4 +1,4 @@
-import { BookingSeat, PaymentStatus } from '@prisma/client';
+import { BookingSeat, PaymentStatus } from 'src/generated/prisma/client';
 
 export interface CreateBookingResponseDto {
   userId: string;

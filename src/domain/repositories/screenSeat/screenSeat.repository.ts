@@ -1,4 +1,4 @@
-import { ScreenSeat } from '@prisma/client';
+import { ScreenSeat } from 'src/generated/prisma/client';
 
 export interface ScreenSeatCreateData {
   theaterScreenId: string;

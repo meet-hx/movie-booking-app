@@ -35,6 +35,9 @@ export type TheaterMinAggregateOutputType = {
   phone: string | null
   email: string | null
   website: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TheaterMaxAggregateOutputType = {
@@ -48,6 +51,9 @@ export type TheaterMaxAggregateOutputType = {
   phone: string | null
   email: string | null
   website: string | null
+  createdAt: Date | null
+  updatedAt: Date | null
+  deletedAt: Date | null
 }
 
 export type TheaterCountAggregateOutputType = {
@@ -61,6 +67,9 @@ export type TheaterCountAggregateOutputType = {
   phone: number
   email: number
   website: number
+  createdAt: number
+  updatedAt: number
+  deletedAt: number
   _all: number
 }
 
@@ -76,6 +85,9 @@ export type TheaterMinAggregateInputType = {
   phone?: true
   email?: true
   website?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TheaterMaxAggregateInputType = {
@@ -89,6 +101,9 @@ export type TheaterMaxAggregateInputType = {
   phone?: true
   email?: true
   website?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
 }
 
 export type TheaterCountAggregateInputType = {
@@ -102,6 +117,9 @@ export type TheaterCountAggregateInputType = {
   phone?: true
   email?: true
   website?: true
+  createdAt?: true
+  updatedAt?: true
+  deletedAt?: true
   _all?: true
 }
 
@@ -188,6 +206,9 @@ export type TheaterGroupByOutputType = {
   phone: string
   email: string
   website: string | null
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date | null
   _count: TheaterCountAggregateOutputType | null
   _min: TheaterMinAggregateOutputType | null
   _max: TheaterMaxAggregateOutputType | null
@@ -222,6 +243,9 @@ export type TheaterWhereInput = {
   phone?: Prisma.StringFilter<"Theater"> | string
   email?: Prisma.StringFilter<"Theater"> | string
   website?: Prisma.StringNullableFilter<"Theater"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Theater"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Theater"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Theater"> | Date | string | null
   screens?: Prisma.TheaterScreenListRelationFilter
   shows?: Prisma.ShowListRelationFilter
 }
@@ -237,6 +261,9 @@ export type TheaterOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   screens?: Prisma.TheaterScreenOrderByRelationAggregateInput
   shows?: Prisma.ShowOrderByRelationAggregateInput
 }
@@ -255,6 +282,9 @@ export type TheaterWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"Theater"> | string
   email?: Prisma.StringFilter<"Theater"> | string
   website?: Prisma.StringNullableFilter<"Theater"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Theater"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Theater"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"Theater"> | Date | string | null
   screens?: Prisma.TheaterScreenListRelationFilter
   shows?: Prisma.ShowListRelationFilter
 }, "id">
@@ -270,6 +300,9 @@ export type TheaterOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TheaterCountOrderByAggregateInput
   _max?: Prisma.TheaterMaxOrderByAggregateInput
   _min?: Prisma.TheaterMinOrderByAggregateInput
@@ -289,6 +322,9 @@ export type TheaterScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"Theater"> | string
   email?: Prisma.StringWithAggregatesFilter<"Theater"> | string
   website?: Prisma.StringNullableWithAggregatesFilter<"Theater"> | string | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Theater"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Theater"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Theater"> | Date | string | null
 }
 
 export type TheaterCreateInput = {
@@ -302,6 +338,9 @@ export type TheaterCreateInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   screens?: Prisma.TheaterScreenCreateNestedManyWithoutTheaterInput
   shows?: Prisma.ShowCreateNestedManyWithoutTheaterInput
 }
@@ -317,6 +356,9 @@ export type TheaterUncheckedCreateInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   screens?: Prisma.TheaterScreenUncheckedCreateNestedManyWithoutTheaterInput
   shows?: Prisma.ShowUncheckedCreateNestedManyWithoutTheaterInput
 }
@@ -332,6 +374,9 @@ export type TheaterUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   screens?: Prisma.TheaterScreenUpdateManyWithoutTheaterNestedInput
   shows?: Prisma.ShowUpdateManyWithoutTheaterNestedInput
 }
@@ -347,6 +392,9 @@ export type TheaterUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   screens?: Prisma.TheaterScreenUncheckedUpdateManyWithoutTheaterNestedInput
   shows?: Prisma.ShowUncheckedUpdateManyWithoutTheaterNestedInput
 }
@@ -362,6 +410,9 @@ export type TheaterCreateManyInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
 }
 
 export type TheaterUpdateManyMutationInput = {
@@ -375,6 +426,9 @@ export type TheaterUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TheaterUncheckedUpdateManyInput = {
@@ -388,6 +442,9 @@ export type TheaterUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type TheaterCountOrderByAggregateInput = {
@@ -401,6 +458,9 @@ export type TheaterCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TheaterMaxOrderByAggregateInput = {
@@ -414,6 +474,9 @@ export type TheaterMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TheaterMinOrderByAggregateInput = {
@@ -427,6 +490,9 @@ export type TheaterMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
 }
 
 export type TheaterScalarRelationFilter = {
@@ -473,6 +539,9 @@ export type TheaterCreateWithoutScreensInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   shows?: Prisma.ShowCreateNestedManyWithoutTheaterInput
 }
 
@@ -487,6 +556,9 @@ export type TheaterUncheckedCreateWithoutScreensInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   shows?: Prisma.ShowUncheckedCreateNestedManyWithoutTheaterInput
 }
 
@@ -517,6 +589,9 @@ export type TheaterUpdateWithoutScreensInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   shows?: Prisma.ShowUpdateManyWithoutTheaterNestedInput
 }
 
@@ -531,6 +606,9 @@ export type TheaterUncheckedUpdateWithoutScreensInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   shows?: Prisma.ShowUncheckedUpdateManyWithoutTheaterNestedInput
 }
 
@@ -545,6 +623,9 @@ export type TheaterCreateWithoutShowsInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   screens?: Prisma.TheaterScreenCreateNestedManyWithoutTheaterInput
 }
 
@@ -559,6 +640,9 @@ export type TheaterUncheckedCreateWithoutShowsInput = {
   phone: string
   email: string
   website?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
   screens?: Prisma.TheaterScreenUncheckedCreateNestedManyWithoutTheaterInput
 }
 
@@ -589,6 +673,9 @@ export type TheaterUpdateWithoutShowsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   screens?: Prisma.TheaterScreenUpdateManyWithoutTheaterNestedInput
 }
 
@@ -603,6 +690,9 @@ export type TheaterUncheckedUpdateWithoutShowsInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   screens?: Prisma.TheaterScreenUncheckedUpdateManyWithoutTheaterNestedInput
 }
 
@@ -657,6 +747,9 @@ export type TheaterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   phone?: boolean
   email?: boolean
   website?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
   screens?: boolean | Prisma.Theater$screensArgs<ExtArgs>
   shows?: boolean | Prisma.Theater$showsArgs<ExtArgs>
   _count?: boolean | Prisma.TheaterCountOutputTypeDefaultArgs<ExtArgs>
@@ -673,6 +766,9 @@ export type TheaterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   phone?: boolean
   email?: boolean
   website?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["theater"]>
 
 export type TheaterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -686,6 +782,9 @@ export type TheaterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   phone?: boolean
   email?: boolean
   website?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }, ExtArgs["result"]["theater"]>
 
 export type TheaterSelectScalar = {
@@ -699,9 +798,12 @@ export type TheaterSelectScalar = {
   phone?: boolean
   email?: boolean
   website?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  deletedAt?: boolean
 }
 
-export type TheaterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "city" | "state" | "zipCode" | "country" | "phone" | "email" | "website", ExtArgs["result"]["theater"]>
+export type TheaterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "address" | "city" | "state" | "zipCode" | "country" | "phone" | "email" | "website" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["theater"]>
 export type TheaterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   screens?: boolean | Prisma.Theater$screensArgs<ExtArgs>
   shows?: boolean | Prisma.Theater$showsArgs<ExtArgs>
@@ -727,6 +829,9 @@ export type $TheaterPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     phone: string
     email: string
     website: string | null
+    createdAt: Date
+    updatedAt: Date
+    deletedAt: Date | null
   }, ExtArgs["result"]["theater"]>
   composites: {}
 }
@@ -1162,6 +1267,9 @@ export interface TheaterFieldRefs {
   readonly phone: Prisma.FieldRef<"Theater", 'String'>
   readonly email: Prisma.FieldRef<"Theater", 'String'>
   readonly website: Prisma.FieldRef<"Theater", 'String'>
+  readonly createdAt: Prisma.FieldRef<"Theater", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Theater", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Theater", 'DateTime'>
 }
     
 

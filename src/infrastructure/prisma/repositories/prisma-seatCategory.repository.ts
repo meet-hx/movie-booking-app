@@ -4,7 +4,7 @@ import {
   SeatCategoryRepository,
   SeatCategoryUpdateData,
 } from '../../../domain/repositories/seatCategory/seatCategory.repository';
-import { SeatCategory } from '@prisma/client';
+import { SeatCategory } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
 
 @Injectable()
@@ -20,6 +20,9 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
         description: true,
         additionalPrice: true,
         theaterScreenId: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -41,6 +44,9 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
         description: true,
         additionalPrice: true,
         theaterScreenId: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -56,6 +62,9 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
         description: true,
         additionalPrice: true,
         theaterScreenId: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -69,6 +78,9 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
         description: true,
         additionalPrice: true,
         theaterScreenId: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }
@@ -86,6 +98,9 @@ export class PrismaSeatCategoryRepository implements SeatCategoryRepository {
         description: true,
         additionalPrice: true,
         theaterScreenId: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
       },
     });
   }

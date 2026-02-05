@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { BookingRepository } from '../../domain/repositories/booking/booking.repository';
 import { BookSeatsCommand } from './dto/book-seats.command';
-import { Booking } from '@prisma/client';
+import { Booking } from 'src/generated/prisma/client';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
 import { ShowService } from '../show/show.service';
 import { CreateBookingResponseDto } from './dto/create-booking.dto';
