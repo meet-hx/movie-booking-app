@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { TheaterScreenService } from './theater-screen.service';
-import { AddTheaterScreensRequestDto } from './dto/add-theater-screens.dto';
+import type { AddTheaterScreensRequestDto } from './dto/add-theater-screens.dto';
 
 @Controller('theater-screens')
 export class TheaterScreenController {

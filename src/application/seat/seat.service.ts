@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { AddSeatsRequestDto } from './dto/add-seats.dto';
 import { SeatCategoryService } from '../seatCategory/seat-category.service';
 import { TheaterScreenService } from '../theaterScreen/theater-screen.service';
@@ -11,13 +16,12 @@ export class SeatService {
     @Inject(REPOSITORY_TOKENS.ScreenSeatRepository)
     private readonly screenSeatRepository: ScreenSeatRepository,
     private readonly seatCategoryService: SeatCategoryService,
+    @Inject(forwardRef(() => TheaterScreenService))
     private readonly theaterScreenService: TheaterScreenService,
   ) {}
 
   async addSeats(request: AddSeatsRequestDto): Promise<{ created: number }> {
-    await this.theaterScreenService.ensureScreenExists(
-      request.theaterScreenId,
-    );
+    await this.theaterScreenService.ensureScreenExists(request.theaterScreenId);
 
     const seatRows = [] as {
       theaterScreenId: string;

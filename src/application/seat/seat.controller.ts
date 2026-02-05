@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SeatService } from './seat.service';
-import { AddSeatsRequestDto } from './dto/add-seats.dto';
+import type { AddSeatsRequestDto } from './dto/add-seats.dto';
 
 @Controller('screen-seats')
 export class SeatController {
