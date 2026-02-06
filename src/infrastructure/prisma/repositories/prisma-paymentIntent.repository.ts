@@ -5,7 +5,7 @@ import {
   CreatePaymentIntentPayload,
   CreatePaymentIntentResult,
 } from '../../../domain/repositories/paymentIntent/createPaymentIntent';
-import { PaymentIntentStatus } from 'src/generated/prisma/client';
+import { PaymentIntentStatus, Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class PrismaPaymentIntentRepository implements PaymentIntentRepository {
@@ -22,7 +22,8 @@ export class PrismaPaymentIntentRepository implements PaymentIntentRepository {
         status: payload.status,
         amount: payload.amount,
         currency: payload.currency,
-        rawEvent: payload.rawEvent ?? undefined,
+        rawEvent:
+          (payload.rawEvent as unknown as Prisma.InputJsonValue) ?? undefined,
       },
     });
 
@@ -93,7 +94,7 @@ export class PrismaPaymentIntentRepository implements PaymentIntentRepository {
       where: { stripePaymentIntentId },
       data: {
         status,
-        rawEvent: rawEvent ?? undefined,
+        rawEvent: (rawEvent as unknown as Prisma.InputJsonValue) ?? undefined,
       },
     });
   }

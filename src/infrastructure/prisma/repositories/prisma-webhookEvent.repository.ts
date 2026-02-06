@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { Prisma } from 'src/generated/prisma/client';
 import {
   WebhookEventPayload,
   WebhookEventRepository,
@@ -23,7 +24,7 @@ export class PrismaWebhookEventRepository implements WebhookEventRepository {
       data: {
         id: payload.id,
         type: payload.type,
-        payload: payload.payload,
+        payload: payload.payload as unknown as Prisma.InputJsonValue,
       },
     });
   }
