@@ -5,6 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import type { BookingRepository } from '../../domain/repositories/booking/booking.repository';
 import { REPOSITORY_TOKENS } from '../../infrastructure/persistence/tokens';
 import { ShowService } from '../show/show.service';
@@ -14,17 +15,37 @@ import {
 } from './dto/create-booking-intent.dto';
 import { Strings } from '../../utils/strings';
 import { SeatService } from '../seat/seat.service';
+import type { PaymentIntentRepository } from '../../domain/repositories/paymentIntent/payment-intent.repository';
+import type { WebhookEventRepository } from '../../domain/repositories/webhookEvent/webhook-event.repository';
+import Stripe from 'stripe';
+import {
+  BookingStatus,
+  PaymentIntentStatus,
+  PaymentStatus,
+} from 'src/generated/prisma/client';
+import {
+  CreatePaymentIntentRequestDto,
+  CreatePaymentIntentResponseDto,
+} from './dto/create-payment-intent.dto';
+import { GetBookingStatusResponseDto } from './dto/get-booking-status.dto';
 
 @Injectable()
 export class BookingService {
   private static readonly SERVICE_CHARGE_RATE = 0.05;
   private static readonly HOLD_MINUTES = 10;
 
+  private stripeClient: Stripe | null = null;
+
   constructor(
     @Inject(REPOSITORY_TOKENS.BookingRepository)
     private readonly bookingRepository: BookingRepository,
+    @Inject(REPOSITORY_TOKENS.PaymentIntentRepository)
+    private readonly paymentIntentRepository: PaymentIntentRepository,
+    @Inject(REPOSITORY_TOKENS.WebhookEventRepository)
+    private readonly webhookEventRepository: WebhookEventRepository,
     private readonly showService: ShowService,
     private readonly seatService: SeatService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createBookingIntent(
@@ -158,7 +179,225 @@ export class BookingService {
     };
   }
 
+  async createPaymentIntent(
+    bookingIntentId: string,
+    userId: string,
+    request: CreatePaymentIntentRequestDto,
+  ): Promise<CreatePaymentIntentResponseDto> {
+    const booking = await this.bookingRepository.findByIdWithSeats(
+      bookingIntentId,
+    );
+    if (!booking || booking.userId !== userId) {
+      throw new NotFoundException(Strings.booking.intentNotFound);
+    }
+
+    if (booking.paymentStatus !== PaymentStatus.PENDING) {
+      throw new ConflictException(Strings.booking.intentAlreadyProcessed);
+    }
+
+    if (booking.expiresAt.getTime() <= Date.now()) {
+      throw new BadRequestException(Strings.booking.intentExpired);
+    }
+
+    const existingPaymentIntent =
+      await this.paymentIntentRepository.findByBookingId(bookingIntentId);
+    if (existingPaymentIntent) {
+      return {
+        bookingIntentId,
+        paymentIntentId: existingPaymentIntent.stripePaymentIntentId,
+        clientSecret: existingPaymentIntent.clientSecret,
+        amount: existingPaymentIntent.amount,
+        currency: existingPaymentIntent.currency,
+        expiresAt: booking.expiresAt,
+      };
+    }
+
+    const currency = request.currency ?? 'inr';
+    const amount = this.roundAmount(booking.totalAmount);
+    const stripeAmount = Math.round(amount * 100);
+    const stripe = this.getStripeClient();
+
+    const seatIds = booking.seats.map((seat) => seat.seatId);
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: stripeAmount,
+      currency,
+      metadata: {
+        bookingIntentId,
+        showId: booking.showId,
+        seatIds: seatIds.join(','),
+      },
+    });
+
+    await this.paymentIntentRepository.create({
+      bookingId: bookingIntentId,
+      stripePaymentIntentId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret ?? '',
+      status: this.mapStripeStatus(paymentIntent.status),
+      amount,
+      currency,
+      rawEvent: paymentIntent as unknown as Record<string, unknown>,
+    });
+
+    return {
+      bookingIntentId,
+      paymentIntentId: paymentIntent.id,
+      clientSecret: paymentIntent.client_secret ?? '',
+      amount,
+      currency,
+      expiresAt: booking.expiresAt,
+    };
+  }
+
+  async getBookingStatus(
+    bookingIntentId: string,
+    userId: string,
+  ): Promise<GetBookingStatusResponseDto> {
+    const booking = await this.bookingRepository.findByIdWithSeats(
+      bookingIntentId,
+    );
+    if (!booking || booking.userId !== userId) {
+      throw new NotFoundException(Strings.booking.intentNotFound);
+    }
+
+    return {
+      bookingIntentId: booking.id,
+      showId: booking.showId,
+      paymentStatus: booking.paymentStatus,
+      expiresAt: booking.expiresAt,
+      totalAmount: booking.totalAmount,
+      serviceCharge: booking.serviceCharge,
+      seats: booking.seats.map((seat) => ({
+        seatId: seat.seatId,
+        status: seat.bookingStatus,
+        amount: Number(seat.amount),
+      })),
+    };
+  }
+
+  async handleStripeWebhook(
+    payload: Buffer,
+    signature: string | undefined,
+  ): Promise<{ received: boolean }> {
+    const stripe = this.getStripeClient();
+    const webhookSecret = this.configService.get<string>(
+      'STRIPE_WEBHOOK_SECRET',
+    );
+
+    if (!webhookSecret || !signature) {
+      throw new BadRequestException(Strings.booking.webhookSignatureMissing);
+    }
+
+    const event = stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      webhookSecret,
+    );
+
+    if (await this.webhookEventRepository.exists(event.id)) {
+      return { received: true };
+    }
+
+    await this.webhookEventRepository.create({
+      id: event.id,
+      type: event.type,
+      payload: event as unknown as Record<string, unknown>,
+    });
+
+    if (!event.type.startsWith('payment_intent.')) {
+      return { received: true };
+    }
+
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    const storedPaymentIntent =
+      await this.paymentIntentRepository.findByStripePaymentIntentId(
+        paymentIntent.id,
+      );
+
+    if (!storedPaymentIntent) {
+      return { received: true };
+    }
+
+    const booking = await this.bookingRepository.findByIdWithSeats(
+      storedPaymentIntent.bookingId,
+    );
+
+    if (!booking) {
+      return { received: true };
+    }
+
+    const mappedStatus = this.mapStripeStatus(paymentIntent.status);
+    await this.paymentIntentRepository.updateStatus(
+      paymentIntent.id,
+      mappedStatus,
+      paymentIntent as unknown as Record<string, unknown>,
+    );
+
+    if (booking.paymentStatus !== PaymentStatus.PENDING) {
+      return { received: true };
+    }
+
+    const isExpired = booking.expiresAt.getTime() <= Date.now();
+    if (event.type === 'payment_intent.succeeded' && !isExpired) {
+      await this.bookingRepository.updatePaymentStatusAndSeats(
+        booking.id,
+        PaymentStatus.PAID,
+        BookingStatus.CONFIRMED,
+      );
+      return { received: true };
+    }
+
+    if (
+      event.type === 'payment_intent.payment_failed' ||
+      event.type === 'payment_intent.canceled' ||
+      isExpired
+    ) {
+      await this.bookingRepository.updatePaymentStatusAndSeats(
+        booking.id,
+        PaymentStatus.FAILED,
+        BookingStatus.CANCELLED,
+      );
+    }
+
+    return { received: true };
+  }
+
   private roundAmount(amount: number): number {
     return Number(amount.toFixed(2));
+  }
+
+  private getStripeClient(): Stripe {
+    if (this.stripeClient) {
+      return this.stripeClient;
+    }
+
+    const secretKey = this.configService.get<string>('STRIPE_SECRET_KEY');
+    if (!secretKey) {
+      throw new BadRequestException(Strings.booking.stripeNotConfigured);
+    }
+
+    this.stripeClient = new Stripe(secretKey, {
+      apiVersion: '2024-12-18.acacia',
+    });
+
+    return this.stripeClient;
+  }
+
+  private mapStripeStatus(status: string): PaymentIntentStatus {
+    switch (status) {
+      case 'requires_payment_method':
+        return PaymentIntentStatus.REQUIRES_PAYMENT_METHOD;
+      case 'requires_confirmation':
+        return PaymentIntentStatus.REQUIRES_CONFIRMATION;
+      case 'requires_action':
+        return PaymentIntentStatus.REQUIRES_ACTION;
+      case 'processing':
+        return PaymentIntentStatus.PROCESSING;
+      case 'succeeded':
+        return PaymentIntentStatus.SUCCEEDED;
+      case 'canceled':
+        return PaymentIntentStatus.CANCELED;
+      default:
+        return PaymentIntentStatus.REQUIRES_PAYMENT_METHOD;
+    }
   }
 }

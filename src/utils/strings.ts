@@ -42,5 +42,10 @@ export class Strings {
       `Seat ${options.rowNumber}${options.seatNumber} not found for this show.`,
     seatAlreadyBooked: 'One or more seats are already booked.',
     duplicateSeatSelection: 'Duplicate seats are not allowed in the request.',
+    intentNotFound: 'Booking intent not found.',
+    intentExpired: 'Booking intent has expired.',
+    intentAlreadyProcessed: 'Booking intent has already been processed.',
+    webhookSignatureMissing: 'Stripe webhook signature is missing.',
+    stripeNotConfigured: 'Stripe is not configured.',
   };
 }
