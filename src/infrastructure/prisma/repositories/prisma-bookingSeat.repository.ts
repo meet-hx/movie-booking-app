@@ -16,6 +16,7 @@ export class PrismaBookingSeatRepository implements BookingSeatRepository {
         seatId: true,
         amount: true,
         bookingStatus: true,
+        seatNumber: true,
         createdAt: true,
         updatedAt: true,
         deletedAt: true,

@@ -36,3 +36,15 @@ export const BookingStatus = {
 } as const
 
 export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
+export const PaymentIntentStatus = {
+  REQUIRES_PAYMENT_METHOD: 'REQUIRES_PAYMENT_METHOD',
+  REQUIRES_CONFIRMATION: 'REQUIRES_CONFIRMATION',
+  REQUIRES_ACTION: 'REQUIRES_ACTION',
+  PROCESSING: 'PROCESSING',
+  SUCCEEDED: 'SUCCEEDED',
+  CANCELED: 'CANCELED'
+} as const
+
+export type PaymentIntentStatus = (typeof PaymentIntentStatus)[keyof typeof PaymentIntentStatus]

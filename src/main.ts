@@ -17,6 +17,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+  // app.use('/bookings/webhook', raw({ type: 'application/json' }));
   app.use(cookieParser());
   app.useGlobalFilters(new CommonExceptionFilter());
   app.useGlobalInterceptors(new CommonResponseInterceptor());

@@ -4,10 +4,11 @@ export interface CreateBookingPayload {
   userId: string;
   showId: string;
   bookingTime: Date;
+  expiresAt: Date;
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
-  seats: BookingSeat[];
+  seats: (Partial<BookingSeat> & { seatNumber: number })[];
 }
 
 export interface CreateBookingResult {
@@ -15,8 +16,9 @@ export interface CreateBookingResult {
   userId: string;
   showId: string;
   bookingTime: Date;
+  expiresAt: Date;
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
-  seats: BookingSeat[];
+  seats: (Partial<BookingSeat> & { seatNumber: number })[];
 }

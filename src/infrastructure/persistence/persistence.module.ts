@@ -12,6 +12,8 @@ import { PrismaTheaterScreenRepository } from '../prisma/repositories/prisma-the
 import { PrismaSeatCategoryRepository } from '../prisma/repositories/prisma-seatCategory.repository';
 import { PrismaScreenSeatRepository } from '../prisma/repositories/prisma-screenSeat.repository';
 import { PrismaBookingSeatRepository } from '../prisma/repositories/prisma-bookingSeat.repository';
+import { PrismaPaymentIntentRepository } from '../prisma/repositories/prisma-paymentIntent.repository';
+import { PrismaWebhookEventRepository } from '../prisma/repositories/prisma-webhookEvent.repository';
 
 @Module({
   imports: [PrismaModule],
@@ -60,6 +62,14 @@ import { PrismaBookingSeatRepository } from '../prisma/repositories/prisma-booki
       provide: REPOSITORY_TOKENS.BookingSeatRepository,
       useClass: PrismaBookingSeatRepository,
     },
+    {
+      provide: REPOSITORY_TOKENS.PaymentIntentRepository,
+      useClass: PrismaPaymentIntentRepository,
+    },
+    {
+      provide: REPOSITORY_TOKENS.WebhookEventRepository,
+      useClass: PrismaWebhookEventRepository,
+    },
   ],
   exports: [
     REPOSITORY_TOKENS.MovieRepository,
@@ -73,7 +83,8 @@ import { PrismaBookingSeatRepository } from '../prisma/repositories/prisma-booki
     REPOSITORY_TOKENS.SeatCategoryRepository,
     REPOSITORY_TOKENS.ScreenSeatRepository,
     REPOSITORY_TOKENS.BookingSeatRepository,
+    REPOSITORY_TOKENS.PaymentIntentRepository,
+    REPOSITORY_TOKENS.WebhookEventRepository,
   ],
 })
 export class PersistenceModule {}
-

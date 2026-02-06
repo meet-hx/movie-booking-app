@@ -91,6 +91,48 @@ export class SeatService {
     return this.screenSeatRepository.findByTheaterScreenId(theaterScreenId);
   }
 
+  async findSeatDetailsByIds(
+    theaterScreenId: string,
+    seatIds: string[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumbers: number[];
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  > {
+    return this.screenSeatRepository.findSeatDetailsByIds(
+      theaterScreenId,
+      seatIds,
+    );
+  }
+
+  async findSeatDetailsByRowAndNumbers(
+    theaterScreenId: string,
+    selections: { rowNumber: string; seatNumber: number }[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumber: number;
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  > {
+    return this.screenSeatRepository.findSeatDetailsByRowAndNumbers(
+      theaterScreenId,
+      selections,
+    );
+  }
+
   async updateSeat(id: string, request: UpdateScreenSeatRequestDto) {
     const seat = await this.screenSeatRepository.findById(id);
     if (!seat) {
