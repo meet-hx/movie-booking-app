@@ -8,6 +8,7 @@ export interface UserRepository {
   findByWithAuth(
     userWhereInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null>;
+  findByEmailOrContact(email: string, contactNo?: string): Promise<User | null>;
   exists(userWhereInput: Prisma.UserWhereUniqueInput): Promise<boolean>;
   create(
     userCreateInput: Prisma.UserCreateInput,

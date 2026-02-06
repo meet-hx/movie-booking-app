@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { Bcrypt } from 'src/utils/bcrypt';
 import { Strings } from 'src/utils/strings';
@@ -17,8 +21,9 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<SignInDtoResponse> {
     const user = await this.userService.findByEmailWithAuth(email);
     if (!user || !Bcrypt.compareSync(password, user.password)) {
-      throw new Error(Strings.auth.invalidPassword);
+      throw new UnauthorizedException(Strings.auth.invalidPassword);
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
     const token = this.jwtService.sign<JwtPayload>({
       id: user.id,
@@ -30,11 +35,12 @@ export class AuthService {
   }
 
   async signUp(userDto: CreateUserDtoRequest): Promise<SignInDtoResponse> {
-    const userExists = await this.userService.findByEmailWithAuth(
+    const userExists = await this.userService.findByEmailOrContact(
       userDto.email,
+      userDto.contactNo,
     );
     if (userExists) {
-      throw new Error(Strings.auth.userAlreadyExists);
+      throw new ConflictException(Strings.auth.userAlreadyExists);
     }
     const user = await this.userService.create(userDto);
     const token = this.jwtService.sign<JwtPayload>({

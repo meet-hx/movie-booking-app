@@ -2,7 +2,7 @@ export class Strings {
   static auth = {
     userNotFound: 'User not found',
     invalidPassword: 'Invalid password',
-    userAlreadyExists: 'User already exists',
+    userAlreadyExists: 'User already exists with this email or contact number',
   };
   static theater = {
     notFound: 'Theater not found.',

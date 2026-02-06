@@ -25,6 +25,17 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
 
+  async findByEmailOrContact(
+    email: string,
+    contactNo?: string,
+  ): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ email }, { contactNo }],
+      },
+    });
+  }
+
   async findBy(
     userWhereInput: Prisma.UserWhereUniqueInput,
   ): Promise<Omit<User, 'password'> | null> {
