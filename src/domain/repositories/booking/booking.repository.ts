@@ -3,11 +3,11 @@ import { CreateBookingPayload, CreateBookingResult } from './createBooking';
 
 export interface BookingRepository {
   create(payload: CreateBookingPayload): Promise<CreateBookingResult>;
-  findBookedSeatIds(
+  findConflictingSeats(
     showId: string,
-    seatIds: string[],
+    seatSelections: { seatId: string; seatNumber: number }[],
     userId: string,
-  ): Promise<string[]>;
+  ): Promise<{ seatId: string; seatNumber: number }[]>;
   findByIdWithSeats(id: string): Promise<CreateBookingResult | null>;
   updatePaymentStatusAndSeats(
     bookingId: string,

@@ -25,6 +25,7 @@ export class PrismaBookingRepository implements BookingRepository {
           createMany: {
             data: payload.seats.map((seat) => ({
               seatId: seat.seatId!,
+              seatNumber: seat.seatNumber,
               amount: seat.amount!,
               bookingStatus: seat.bookingStatus!,
             })),
@@ -74,38 +75,50 @@ export class PrismaBookingRepository implements BookingRepository {
     };
   }
 
-  async findBookedSeatIds(
+  async findConflictingSeats(
     showId: string,
-    seatIds: string[],
+    seatSelections: { seatId: string; seatNumber: number }[],
     userId: string,
-  ): Promise<string[]> {
+  ): Promise<{ seatId: string; seatNumber: number }[]> {
     const now = new Date();
     const bookedSeats = await this.prisma.bookingSeat.findMany({
       where: {
-        seatId: { in: seatIds },
-        booking: {
-          showId,
-        },
-        OR: [
+        AND: [
           {
-            bookingStatus: BookingStatus.CONFIRMED,
+            OR: seatSelections.map((sel) => ({
+              seatId: sel.seatId,
+              seatNumber: sel.seatNumber,
+            })),
           },
           {
-            bookingStatus: BookingStatus.RESERVED,
             booking: {
-              userId: { not: userId },
-              paymentStatus: PaymentStatus.PENDING,
-              expiresAt: { gt: now },
+              showId,
             },
+          },
+          {
+            OR: [
+              {
+                bookingStatus: BookingStatus.CONFIRMED,
+              },
+              {
+                bookingStatus: BookingStatus.RESERVED,
+                booking: {
+                  userId: { not: userId },
+                  paymentStatus: PaymentStatus.PENDING,
+                  expiresAt: { gt: now },
+                },
+              },
+            ],
           },
         ],
       },
       select: {
         seatId: true,
+        seatNumber: true,
       },
     });
 
-    return bookedSeats.map((seat) => seat.seatId);
+    return bookedSeats;
   }
 
   async updatePaymentStatusAndSeats(

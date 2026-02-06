@@ -8,7 +8,7 @@ export interface CreateBookingPayload {
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
-  seats: Partial<BookingSeat>[];
+  seats: (Partial<BookingSeat> & { seatNumber: number })[];
 }
 
 export interface CreateBookingResult {
@@ -20,5 +20,5 @@ export interface CreateBookingResult {
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
-  seats: Partial<BookingSeat>[];
+  seats: (Partial<BookingSeat> & { seatNumber: number })[];
 }

@@ -243,6 +243,7 @@ export const BookingSeatScalarFieldEnum = {
   id: 'id',
   bookingId: 'bookingId',
   seatId: 'seatId',
+  seatNumber: 'seatNumber',
   amount: 'amount',
   bookingStatus: 'bookingStatus',
   createdAt: 'createdAt',

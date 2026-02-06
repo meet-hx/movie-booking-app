@@ -75,29 +75,32 @@ export class BookingService {
 
     const orderedSelections = seatSelections;
 
-    const seatIds = orderedSelections.map((seat) => seat.id);
-    const bookedSeatIds = await this.bookingRepository.findBookedSeatIds(
+    const selections = orderedSelections.map((seat) => ({
+      seatId: seat.id,
+      seatNumber: seat.seatNumber,
+    }));
+
+    const conflictingSeats = await this.bookingRepository.findConflictingSeats(
       request.showId,
-      seatIds,
+      selections,
       userId,
     );
 
-    if (bookedSeatIds.length > 0) {
-      const bookedSeatLabels = Array.from(
-        new Set(
-          orderedSelections
-            .filter((seat) => bookedSeatIds.includes(seat.id))
-            .map((seat) => `${seat.rowNumber}${seat.seatNumber}`),
-        ),
-      );
+    if (conflictingSeats.length > 0) {
+      const conflictingLabels = conflictingSeats.map((cs) => {
+        const seat = orderedSelections.find((s) => s.id === cs.seatId);
+        return `${seat?.rowNumber}${cs.seatNumber}`;
+      });
+
       throw new ConflictException(
-        Strings.booking.seatAlreadyBooked({ seats: bookedSeatLabels }),
+        Strings.booking.seatAlreadyBooked({ seats: conflictingLabels }),
       );
     }
 
     const basePrice = show.basePrice.toNumber();
     const seatAmounts = orderedSelections.map((seat) => ({
       seatId: seat.id,
+      seatNumber: seat.seatNumber,
       amount: this.roundAmount(basePrice + seat.seatCategory.additionalPrice),
       bookingStatus: BookingStatus.RESERVED,
     }));
@@ -162,6 +165,7 @@ export class BookingService {
       paymentStatus: PaymentStatus.PENDING,
       seats: seatAmounts.map((seat) => ({
         seatId: seat.seatId,
+        seatNumber: seat.seatNumber,
         amount: Decimal(seat.amount),
         bookingStatus: BookingStatus.RESERVED,
       })),
