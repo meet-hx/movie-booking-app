@@ -58,13 +58,11 @@ export class BookingService {
       throw new NotFoundException(Strings.show.notFound);
     }
 
-    if (show.theaterScreenId !== request.screenId) {
-      throw new BadRequestException(Strings.theaterScreen.mismatch);
-    }
+    const screenId = show.theaterScreenId;
 
     const seatSelections =
       await this.seatService.findSeatDetailsByRowAndNumbers(
-        request.screenId,
+        screenId,
         request.seats.map((s) => ({
           rowNumber: s.row,
           seatNumber: parseInt(s.seatNo, 10),
@@ -163,7 +161,7 @@ export class BookingService {
       bookingIntentId: booking.id,
       showId: booking.showId,
       basePrice,
-      screenId: request.screenId,
+      screenId,
       seats: seatResponse,
       categoryAmounts: Array.from(categoryMap.values()),
       totalSeatAmount,

@@ -31,14 +31,6 @@ export class CreateBookingIntentRequestDto {
   showId: string;
 
   @ApiProperty({
-    description: 'Theater screen identifier',
-    example: '123e4567-e89b-12d3-a456-426614174111',
-    format: 'uuid',
-  })
-  @IsUUID()
-  screenId: string;
-
-  @ApiProperty({
     description: 'Selected seats',
     type: [SeatSelectionDto],
     isArray: true,
