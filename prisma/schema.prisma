@@ -37,15 +37,6 @@ enum PaymentIntentStatus {
   CANCELED
 }
 
-enum PaymentIntentStatus {
-  REQUIRES_PAYMENT_METHOD
-  REQUIRES_CONFIRMATION
-  REQUIRES_ACTION
-  PROCESSING
-  SUCCEEDED
-  CANCELED
-}
-
 model Movie {
   id          String          @id @default(uuid())
   title       String
@@ -106,6 +97,7 @@ model User {
   contactNo String?
   password  String
   bookings  Booking[]
+  paymentIntents PaymentIntent[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt @default(now())
@@ -215,14 +207,12 @@ model Booking {
   showId        String
   bookingTime   DateTime      @default(now())
   expiresAt     DateTime
-  expiresAt     DateTime
   totalAmount   Decimal       @db.Decimal(10, 2)
   serviceCharge Decimal       @db.Decimal(10, 2)
   paymentStatus PaymentStatus @default(PENDING)
   user          User          @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   show          Show          @relation(fields: [showId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   seats         BookingSeat[]
-  paymentIntents PaymentIntent[]
   paymentIntents PaymentIntent[]
 
   createdAt DateTime  @default(now())
@@ -260,7 +250,7 @@ model PaymentIntent {
   amount                Decimal             @db.Decimal(10, 2)
   currency              String
   rawEvent              Json?
-  booking               Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  booking               Booking             @relation(fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   user                  User                @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   createdAt DateTime  @default(now())

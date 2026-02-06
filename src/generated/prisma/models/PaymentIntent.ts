@@ -37,6 +37,7 @@ export type PaymentIntentSumAggregateOutputType = {
 export type PaymentIntentMinAggregateOutputType = {
   id: string | null
   bookingId: string | null
+  userId: string | null
   stripePaymentIntentId: string | null
   clientSecret: string | null
   status: $Enums.PaymentIntentStatus | null
@@ -50,6 +51,7 @@ export type PaymentIntentMinAggregateOutputType = {
 export type PaymentIntentMaxAggregateOutputType = {
   id: string | null
   bookingId: string | null
+  userId: string | null
   stripePaymentIntentId: string | null
   clientSecret: string | null
   status: $Enums.PaymentIntentStatus | null
@@ -63,6 +65,7 @@ export type PaymentIntentMaxAggregateOutputType = {
 export type PaymentIntentCountAggregateOutputType = {
   id: number
   bookingId: number
+  userId: number
   stripePaymentIntentId: number
   clientSecret: number
   status: number
@@ -87,6 +90,7 @@ export type PaymentIntentSumAggregateInputType = {
 export type PaymentIntentMinAggregateInputType = {
   id?: true
   bookingId?: true
+  userId?: true
   stripePaymentIntentId?: true
   clientSecret?: true
   status?: true
@@ -100,6 +104,7 @@ export type PaymentIntentMinAggregateInputType = {
 export type PaymentIntentMaxAggregateInputType = {
   id?: true
   bookingId?: true
+  userId?: true
   stripePaymentIntentId?: true
   clientSecret?: true
   status?: true
@@ -113,6 +118,7 @@ export type PaymentIntentMaxAggregateInputType = {
 export type PaymentIntentCountAggregateInputType = {
   id?: true
   bookingId?: true
+  userId?: true
   stripePaymentIntentId?: true
   clientSecret?: true
   status?: true
@@ -214,6 +220,7 @@ export type PaymentIntentGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type PaymentIntentGroupByOutputType = {
   id: string
   bookingId: string
+  userId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -251,6 +258,7 @@ export type PaymentIntentWhereInput = {
   NOT?: Prisma.PaymentIntentWhereInput | Prisma.PaymentIntentWhereInput[]
   id?: Prisma.StringFilter<"PaymentIntent"> | string
   bookingId?: Prisma.StringFilter<"PaymentIntent"> | string
+  userId?: Prisma.StringFilter<"PaymentIntent"> | string
   stripePaymentIntentId?: Prisma.StringFilter<"PaymentIntent"> | string
   clientSecret?: Prisma.StringFilter<"PaymentIntent"> | string
   status?: Prisma.EnumPaymentIntentStatusFilter<"PaymentIntent"> | $Enums.PaymentIntentStatus
@@ -261,11 +269,13 @@ export type PaymentIntentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
   booking?: Prisma.XOR<Prisma.BookingScalarRelationFilter, Prisma.BookingWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PaymentIntentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   stripePaymentIntentId?: Prisma.SortOrder
   clientSecret?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -276,6 +286,7 @@ export type PaymentIntentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   booking?: Prisma.BookingOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PaymentIntentWhereUniqueInput = Prisma.AtLeast<{
@@ -285,6 +296,7 @@ export type PaymentIntentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.PaymentIntentWhereInput[]
   NOT?: Prisma.PaymentIntentWhereInput | Prisma.PaymentIntentWhereInput[]
   bookingId?: Prisma.StringFilter<"PaymentIntent"> | string
+  userId?: Prisma.StringFilter<"PaymentIntent"> | string
   clientSecret?: Prisma.StringFilter<"PaymentIntent"> | string
   status?: Prisma.EnumPaymentIntentStatusFilter<"PaymentIntent"> | $Enums.PaymentIntentStatus
   amount?: Prisma.DecimalFilter<"PaymentIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -294,11 +306,13 @@ export type PaymentIntentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
   booking?: Prisma.XOR<Prisma.BookingScalarRelationFilter, Prisma.BookingWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "stripePaymentIntentId">
 
 export type PaymentIntentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   stripePaymentIntentId?: Prisma.SortOrder
   clientSecret?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -321,6 +335,7 @@ export type PaymentIntentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PaymentIntentScalarWhereWithAggregatesInput | Prisma.PaymentIntentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   bookingId?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
+  userId?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   stripePaymentIntentId?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   clientSecret?: Prisma.StringWithAggregatesFilter<"PaymentIntent"> | string
   status?: Prisma.EnumPaymentIntentStatusWithAggregatesFilter<"PaymentIntent"> | $Enums.PaymentIntentStatus
@@ -344,11 +359,13 @@ export type PaymentIntentCreateInput = {
   updatedAt?: Date | string
   deletedAt?: Date | string | null
   booking: Prisma.BookingCreateNestedOneWithoutPaymentIntentsInput
+  user: Prisma.UserCreateNestedOneWithoutPaymentIntentsInput
 }
 
 export type PaymentIntentUncheckedCreateInput = {
   id?: string
   bookingId: string
+  userId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -372,11 +389,13 @@ export type PaymentIntentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   booking?: Prisma.BookingUpdateOneRequiredWithoutPaymentIntentsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentIntentsNestedInput
 }
 
 export type PaymentIntentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
@@ -391,6 +410,7 @@ export type PaymentIntentUncheckedUpdateInput = {
 export type PaymentIntentCreateManyInput = {
   id?: string
   bookingId: string
+  userId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -418,6 +438,7 @@ export type PaymentIntentUpdateManyMutationInput = {
 export type PaymentIntentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
@@ -442,6 +463,7 @@ export type PaymentIntentOrderByRelationAggregateInput = {
 export type PaymentIntentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   stripePaymentIntentId?: Prisma.SortOrder
   clientSecret?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -460,6 +482,7 @@ export type PaymentIntentAvgOrderByAggregateInput = {
 export type PaymentIntentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   stripePaymentIntentId?: Prisma.SortOrder
   clientSecret?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -473,6 +496,7 @@ export type PaymentIntentMaxOrderByAggregateInput = {
 export type PaymentIntentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  userId?: Prisma.SortOrder
   stripePaymentIntentId?: Prisma.SortOrder
   clientSecret?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -485,6 +509,48 @@ export type PaymentIntentMinOrderByAggregateInput = {
 
 export type PaymentIntentSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+}
+
+export type PaymentIntentCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput> | Prisma.PaymentIntentCreateWithoutUserInput[] | Prisma.PaymentIntentUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PaymentIntentCreateOrConnectWithoutUserInput | Prisma.PaymentIntentCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.PaymentIntentCreateManyUserInputEnvelope
+  connect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+}
+
+export type PaymentIntentUncheckedCreateNestedManyWithoutUserInput = {
+  create?: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput> | Prisma.PaymentIntentCreateWithoutUserInput[] | Prisma.PaymentIntentUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PaymentIntentCreateOrConnectWithoutUserInput | Prisma.PaymentIntentCreateOrConnectWithoutUserInput[]
+  createMany?: Prisma.PaymentIntentCreateManyUserInputEnvelope
+  connect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+}
+
+export type PaymentIntentUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput> | Prisma.PaymentIntentCreateWithoutUserInput[] | Prisma.PaymentIntentUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PaymentIntentCreateOrConnectWithoutUserInput | Prisma.PaymentIntentCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.PaymentIntentUpsertWithWhereUniqueWithoutUserInput | Prisma.PaymentIntentUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.PaymentIntentCreateManyUserInputEnvelope
+  set?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  delete?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  connect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  update?: Prisma.PaymentIntentUpdateWithWhereUniqueWithoutUserInput | Prisma.PaymentIntentUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.PaymentIntentUpdateManyWithWhereWithoutUserInput | Prisma.PaymentIntentUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
+}
+
+export type PaymentIntentUncheckedUpdateManyWithoutUserNestedInput = {
+  create?: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput> | Prisma.PaymentIntentCreateWithoutUserInput[] | Prisma.PaymentIntentUncheckedCreateWithoutUserInput[]
+  connectOrCreate?: Prisma.PaymentIntentCreateOrConnectWithoutUserInput | Prisma.PaymentIntentCreateOrConnectWithoutUserInput[]
+  upsert?: Prisma.PaymentIntentUpsertWithWhereUniqueWithoutUserInput | Prisma.PaymentIntentUpsertWithWhereUniqueWithoutUserInput[]
+  createMany?: Prisma.PaymentIntentCreateManyUserInputEnvelope
+  set?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  disconnect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  delete?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  connect?: Prisma.PaymentIntentWhereUniqueInput | Prisma.PaymentIntentWhereUniqueInput[]
+  update?: Prisma.PaymentIntentUpdateWithWhereUniqueWithoutUserInput | Prisma.PaymentIntentUpdateWithWhereUniqueWithoutUserInput[]
+  updateMany?: Prisma.PaymentIntentUpdateManyWithWhereWithoutUserInput | Prisma.PaymentIntentUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
 }
 
 export type PaymentIntentCreateNestedManyWithoutBookingInput = {
@@ -533,8 +599,23 @@ export type EnumPaymentIntentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentIntentStatus
 }
 
-export type PaymentIntentCreateWithoutBookingInput = {
+export type PaymentIntentCreateWithoutUserInput = {
   id?: string
+  stripePaymentIntentId: string
+  clientSecret: string
+  status: $Enums.PaymentIntentStatus
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency: string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  booking: Prisma.BookingCreateNestedOneWithoutPaymentIntentsInput
+}
+
+export type PaymentIntentUncheckedCreateWithoutUserInput = {
+  id?: string
+  bookingId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -546,8 +627,67 @@ export type PaymentIntentCreateWithoutBookingInput = {
   deletedAt?: Date | string | null
 }
 
+export type PaymentIntentCreateOrConnectWithoutUserInput = {
+  where: Prisma.PaymentIntentWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput>
+}
+
+export type PaymentIntentCreateManyUserInputEnvelope = {
+  data: Prisma.PaymentIntentCreateManyUserInput | Prisma.PaymentIntentCreateManyUserInput[]
+  skipDuplicates?: boolean
+}
+
+export type PaymentIntentUpsertWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PaymentIntentWhereUniqueInput
+  update: Prisma.XOR<Prisma.PaymentIntentUpdateWithoutUserInput, Prisma.PaymentIntentUncheckedUpdateWithoutUserInput>
+  create: Prisma.XOR<Prisma.PaymentIntentCreateWithoutUserInput, Prisma.PaymentIntentUncheckedCreateWithoutUserInput>
+}
+
+export type PaymentIntentUpdateWithWhereUniqueWithoutUserInput = {
+  where: Prisma.PaymentIntentWhereUniqueInput
+  data: Prisma.XOR<Prisma.PaymentIntentUpdateWithoutUserInput, Prisma.PaymentIntentUncheckedUpdateWithoutUserInput>
+}
+
+export type PaymentIntentUpdateManyWithWhereWithoutUserInput = {
+  where: Prisma.PaymentIntentScalarWhereInput
+  data: Prisma.XOR<Prisma.PaymentIntentUpdateManyMutationInput, Prisma.PaymentIntentUncheckedUpdateManyWithoutUserInput>
+}
+
+export type PaymentIntentScalarWhereInput = {
+  AND?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
+  OR?: Prisma.PaymentIntentScalarWhereInput[]
+  NOT?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
+  id?: Prisma.StringFilter<"PaymentIntent"> | string
+  bookingId?: Prisma.StringFilter<"PaymentIntent"> | string
+  userId?: Prisma.StringFilter<"PaymentIntent"> | string
+  stripePaymentIntentId?: Prisma.StringFilter<"PaymentIntent"> | string
+  clientSecret?: Prisma.StringFilter<"PaymentIntent"> | string
+  status?: Prisma.EnumPaymentIntentStatusFilter<"PaymentIntent"> | $Enums.PaymentIntentStatus
+  amount?: Prisma.DecimalFilter<"PaymentIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"PaymentIntent"> | string
+  rawEvent?: Prisma.JsonNullableFilter<"PaymentIntent">
+  createdAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
+  deletedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
+}
+
+export type PaymentIntentCreateWithoutBookingInput = {
+  id?: string
+  stripePaymentIntentId: string
+  clientSecret: string
+  status: $Enums.PaymentIntentStatus
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency: string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  user: Prisma.UserCreateNestedOneWithoutPaymentIntentsInput
+}
+
 export type PaymentIntentUncheckedCreateWithoutBookingInput = {
   id?: string
+  userId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -585,25 +725,65 @@ export type PaymentIntentUpdateManyWithWhereWithoutBookingInput = {
   data: Prisma.XOR<Prisma.PaymentIntentUpdateManyMutationInput, Prisma.PaymentIntentUncheckedUpdateManyWithoutBookingInput>
 }
 
-export type PaymentIntentScalarWhereInput = {
-  AND?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
-  OR?: Prisma.PaymentIntentScalarWhereInput[]
-  NOT?: Prisma.PaymentIntentScalarWhereInput | Prisma.PaymentIntentScalarWhereInput[]
-  id?: Prisma.StringFilter<"PaymentIntent"> | string
-  bookingId?: Prisma.StringFilter<"PaymentIntent"> | string
-  stripePaymentIntentId?: Prisma.StringFilter<"PaymentIntent"> | string
-  clientSecret?: Prisma.StringFilter<"PaymentIntent"> | string
-  status?: Prisma.EnumPaymentIntentStatusFilter<"PaymentIntent"> | $Enums.PaymentIntentStatus
-  amount?: Prisma.DecimalFilter<"PaymentIntent"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  currency?: Prisma.StringFilter<"PaymentIntent"> | string
-  rawEvent?: Prisma.JsonNullableFilter<"PaymentIntent">
-  createdAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"PaymentIntent"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"PaymentIntent"> | Date | string | null
+export type PaymentIntentCreateManyUserInput = {
+  id?: string
+  bookingId: string
+  stripePaymentIntentId: string
+  clientSecret: string
+  status: $Enums.PaymentIntentStatus
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency: string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+}
+
+export type PaymentIntentUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  booking?: Prisma.BookingUpdateOneRequiredWithoutPaymentIntentsNestedInput
+}
+
+export type PaymentIntentUncheckedUpdateWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+}
+
+export type PaymentIntentUncheckedUpdateManyWithoutUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  bookingId?: Prisma.StringFieldUpdateOperationsInput | string
+  stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  rawEvent?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PaymentIntentCreateManyBookingInput = {
   id?: string
+  userId: string
   stripePaymentIntentId: string
   clientSecret: string
   status: $Enums.PaymentIntentStatus
@@ -626,10 +806,12 @@ export type PaymentIntentUpdateWithoutBookingInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  user?: Prisma.UserUpdateOneRequiredWithoutPaymentIntentsNestedInput
 }
 
 export type PaymentIntentUncheckedUpdateWithoutBookingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
@@ -643,6 +825,7 @@ export type PaymentIntentUncheckedUpdateWithoutBookingInput = {
 
 export type PaymentIntentUncheckedUpdateManyWithoutBookingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   stripePaymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   clientSecret?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumPaymentIntentStatusFieldUpdateOperationsInput | $Enums.PaymentIntentStatus
@@ -659,6 +842,7 @@ export type PaymentIntentUncheckedUpdateManyWithoutBookingInput = {
 export type PaymentIntentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bookingId?: boolean
+  userId?: boolean
   stripePaymentIntentId?: boolean
   clientSecret?: boolean
   status?: boolean
@@ -669,11 +853,13 @@ export type PaymentIntentSelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
   deletedAt?: boolean
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentIntent"]>
 
 export type PaymentIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bookingId?: boolean
+  userId?: boolean
   stripePaymentIntentId?: boolean
   clientSecret?: boolean
   status?: boolean
@@ -684,11 +870,13 @@ export type PaymentIntentSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   deletedAt?: boolean
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentIntent"]>
 
 export type PaymentIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   bookingId?: boolean
+  userId?: boolean
   stripePaymentIntentId?: boolean
   clientSecret?: boolean
   status?: boolean
@@ -699,11 +887,13 @@ export type PaymentIntentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   updatedAt?: boolean
   deletedAt?: boolean
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paymentIntent"]>
 
 export type PaymentIntentSelectScalar = {
   id?: boolean
   bookingId?: boolean
+  userId?: boolean
   stripePaymentIntentId?: boolean
   clientSecret?: boolean
   status?: boolean
@@ -715,25 +905,30 @@ export type PaymentIntentSelectScalar = {
   deletedAt?: boolean
 }
 
-export type PaymentIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bookingId" | "stripePaymentIntentId" | "clientSecret" | "status" | "amount" | "currency" | "rawEvent" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["paymentIntent"]>
+export type PaymentIntentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "bookingId" | "userId" | "stripePaymentIntentId" | "clientSecret" | "status" | "amount" | "currency" | "rawEvent" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["paymentIntent"]>
 export type PaymentIntentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaymentIntentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaymentIntentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   booking?: boolean | Prisma.BookingDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PaymentIntentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaymentIntent"
   objects: {
     booking: Prisma.$BookingPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     bookingId: string
+    userId: string
     stripePaymentIntentId: string
     clientSecret: string
     status: $Enums.PaymentIntentStatus
@@ -1138,6 +1333,7 @@ readonly fields: PaymentIntentFieldRefs;
 export interface Prisma__PaymentIntentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   booking<T extends Prisma.BookingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookingDefaultArgs<ExtArgs>>): Prisma.Prisma__BookingClient<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1169,6 +1365,7 @@ export interface Prisma__PaymentIntentClient<T, Null = never, ExtArgs extends ru
 export interface PaymentIntentFieldRefs {
   readonly id: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly bookingId: Prisma.FieldRef<"PaymentIntent", 'String'>
+  readonly userId: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly stripePaymentIntentId: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly clientSecret: Prisma.FieldRef<"PaymentIntent", 'String'>
   readonly status: Prisma.FieldRef<"PaymentIntent", 'PaymentIntentStatus'>

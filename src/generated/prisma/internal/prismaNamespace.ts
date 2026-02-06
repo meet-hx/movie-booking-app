@@ -1665,6 +1665,7 @@ export type BookingSeatScalarFieldEnum = (typeof BookingSeatScalarFieldEnum)[key
 export const PaymentIntentScalarFieldEnum = {
   id: 'id',
   bookingId: 'bookingId',
+  userId: 'userId',
   stripePaymentIntentId: 'stripePaymentIntentId',
   clientSecret: 'clientSecret',
   status: 'status',
