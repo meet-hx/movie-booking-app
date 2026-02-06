@@ -77,14 +77,28 @@ export class PrismaBookingRepository implements BookingRepository {
   async findBookedSeatIds(
     showId: string,
     seatIds: string[],
+    userId: string,
   ): Promise<string[]> {
+    const now = new Date();
     const bookedSeats = await this.prisma.bookingSeat.findMany({
       where: {
         seatId: { in: seatIds },
-        bookingStatus: 'CONFIRMED',
         booking: {
           showId,
         },
+        OR: [
+          {
+            bookingStatus: BookingStatus.CONFIRMED,
+          },
+          {
+            bookingStatus: BookingStatus.RESERVED,
+            booking: {
+              userId: { not: userId },
+              paymentStatus: PaymentStatus.PENDING,
+              expiresAt: { gt: now },
+            },
+          },
+        ],
       },
       select: {
         seatId: true,

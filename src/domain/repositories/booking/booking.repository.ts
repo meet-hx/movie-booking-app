@@ -3,7 +3,11 @@ import { CreateBookingPayload, CreateBookingResult } from './createBooking';
 
 export interface BookingRepository {
   create(payload: CreateBookingPayload): Promise<CreateBookingResult>;
-  findBookedSeatIds(showId: string, seatIds: string[]): Promise<string[]>;
+  findBookedSeatIds(
+    showId: string,
+    seatIds: string[],
+    userId: string,
+  ): Promise<string[]>;
   findByIdWithSeats(id: string): Promise<CreateBookingResult | null>;
   updatePaymentStatusAndSeats(
     bookingId: string,

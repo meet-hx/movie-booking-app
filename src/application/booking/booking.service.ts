@@ -79,10 +79,20 @@ export class BookingService {
     const bookedSeatIds = await this.bookingRepository.findBookedSeatIds(
       request.showId,
       seatIds,
+      userId,
     );
 
     if (bookedSeatIds.length > 0) {
-      throw new ConflictException(Strings.booking.seatAlreadyBooked);
+      const bookedSeatLabels = Array.from(
+        new Set(
+          orderedSelections
+            .filter((seat) => bookedSeatIds.includes(seat.id))
+            .map((seat) => `${seat.rowNumber}${seat.seatNumber}`),
+        ),
+      );
+      throw new ConflictException(
+        Strings.booking.seatAlreadyBooked({ seats: bookedSeatLabels }),
+      );
     }
 
     const basePrice = show.basePrice.toNumber();
