@@ -342,7 +342,39 @@ export class BookingService {
     }
 
     const isExpired = booking.expiresAt.getTime() <= Date.now();
-    if (event.type === 'payment_intent.succeeded' && !isExpired) {
+    if (event.type === 'payment_intent.succeeded') {
+      if (isExpired) {
+        const conflictingSeats =
+          await this.bookingRepository.findConflictingSeats(
+            booking.showId,
+            booking.seats.map((s) => ({
+              seatId: s.seatId!,
+              seatNumber: s.seatNumber,
+            })),
+            booking.userId,
+          );
+
+        if (conflictingSeats.length > 0) {
+          // Seats are no longer available, trigger refund
+          await stripe.refunds.create({
+            payment_intent: paymentIntent.id,
+            reason: 'requested_by_customer',
+            metadata: {
+              bookingId: booking.id,
+              reason: 'Booking expired and seats taken',
+            },
+          });
+
+          await this.bookingRepository.updatePaymentStatusAndSeats(
+            booking.id,
+            PaymentStatus.REFUNDED,
+            BookingStatus.CANCELLED,
+          );
+          return { received: true };
+        }
+      }
+
+      // Either not expired, or expired but seats are still available
       await this.bookingRepository.updatePaymentStatusAndSeats(
         booking.id,
         PaymentStatus.PAID,
