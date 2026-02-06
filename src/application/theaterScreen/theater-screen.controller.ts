@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TheaterScreenService } from './theater-screen.service';
 import { AddTheaterScreensRequestDto } from './dto/add-theater-screens.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,6 +21,7 @@ export class TheaterScreenController {
   constructor(private readonly theaterScreenService: TheaterScreenService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Add screens to a theater' })
   @ApiBody({ type: AddTheaterScreensRequestDto })
   @ApiResponse({ status: 201, description: 'Screens added successfully' })
@@ -41,6 +52,7 @@ export class TheaterScreenController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a theater screen' })
   @ApiBody({ type: UpdateTheaterScreenRequestDto })
   @ApiResponse({
@@ -56,6 +68,7 @@ export class TheaterScreenController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a theater screen' })
   @ApiResponse({
     status: 200,

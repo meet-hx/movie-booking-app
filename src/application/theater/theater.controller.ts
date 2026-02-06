@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TheaterService } from './theater.service';
 import {
   CreateTheaterRequestDto,
@@ -21,6 +23,7 @@ export class TheaterController {
   constructor(private readonly theaterService: TheaterService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a theater with screens and seats' })
   @ApiBody({ type: CreateTheaterRequestDto })
   @ApiResponse({
@@ -55,6 +58,7 @@ export class TheaterController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a theater' })
   @ApiBody({ type: UpdateTheaterRequestDto })
   @ApiResponse({
@@ -70,6 +74,7 @@ export class TheaterController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a theater' })
   @ApiResponse({
     status: 200,

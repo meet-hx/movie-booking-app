@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { SeatService } from './seat.service';
 import { AddSeatsRequestDto } from './dto/add-seats.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,6 +21,7 @@ export class SeatController {
   constructor(private readonly seatService: SeatService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Add seats to a theater screen' })
   @ApiBody({ type: AddSeatsRequestDto })
   @ApiResponse({ status: 201, description: 'Seats added successfully' })
@@ -41,6 +52,7 @@ export class SeatController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a screen seat' })
   @ApiBody({ type: UpdateScreenSeatRequestDto })
   @ApiResponse({
@@ -56,6 +68,7 @@ export class SeatController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a screen seat' })
   @ApiResponse({ status: 200, description: 'Screen seat deleted successfully' })
   deleteSeat(@Param('id') id: string) {

@@ -6,7 +6,9 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { MovieService } from './movie.service';
 import {
@@ -26,6 +28,7 @@ export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new movie' })
   @ApiBody({ type: CreateMovieRequestDto })
   @ApiResponse({
@@ -63,6 +66,7 @@ export class MovieController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a movie' })
   @ApiBody({ type: UpdateMovieRequestDto })
   @ApiResponse({
@@ -80,6 +84,7 @@ export class MovieController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a movie' })
   @ApiResponse({
     status: 200,

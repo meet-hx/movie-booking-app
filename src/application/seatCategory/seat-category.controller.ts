@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SeatCategoryService } from './seat-category.service';
 import { CreateSeatCategoryRequestDto } from './dto/create-seat-category.dto';
@@ -23,6 +33,7 @@ export class SeatCategoryController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a seat category' })
   @ApiBody({ type: CreateSeatCategoryRequestDto })
   @ApiResponse({
@@ -46,6 +57,7 @@ export class SeatCategoryController {
   }
 
   @Patch()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Update a seat category' })
   @ApiBody({ type: UpdateSeatCategoryRequestDto })
   @ApiResponse({
@@ -58,9 +70,13 @@ export class SeatCategoryController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Delete a seat category' })
   @ApiBody({ type: DeleteSeatCategoryRequestDto })
-  @ApiResponse({ status: 200, description: 'Seat category deleted successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Seat category deleted successfully',
+  })
   delete(@Body() request: DeleteSeatCategoryRequestDto) {
     return this.seatCategoryService.delete(request.id);
   }

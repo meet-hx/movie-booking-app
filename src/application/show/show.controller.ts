@@ -33,6 +33,7 @@ export class ShowController {
   constructor(private readonly showService: ShowService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Create a new show' })
   @ApiResponse({
     status: 201,
@@ -81,7 +82,6 @@ export class ShowController {
   }
 
   @Get('seats')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get seat availability for a show' })
   @ApiResponse({
     status: 200,
