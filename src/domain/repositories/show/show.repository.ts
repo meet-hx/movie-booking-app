@@ -42,6 +42,20 @@ export interface ShowWithDetails {
   };
 }
 
+export interface SeatAvailabilityData {
+  allSeats: {
+    id: string;
+    rowNumber: string;
+    seatNumbers: number[];
+  }[];
+  bookedSeats: {
+    seatId: string;
+    seatNumber: number;
+    userId: string;
+    bookingStatus: string;
+  }[];
+}
+
 export interface ShowRepository {
   findById(id: string): Promise<Show | null>;
   getPricingContext(showId: string, seatIds: string[]): Promise<any | null>;
@@ -53,4 +67,5 @@ export interface ShowRepository {
     startTime: Date,
     endTime: Date,
   ): Promise<Show | null>;
+  getSeatAvailabilityData(showId: string): Promise<SeatAvailabilityData | null>;
 }

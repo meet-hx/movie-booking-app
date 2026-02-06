@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ShowService } from './show.service';
 import {
@@ -12,6 +21,11 @@ import {
   MovieShowtimesResponseDto,
   TheaterShowtimesResponseDto,
 } from './dto/show-availability.dto';
+import {
+  ShowSeatRowDto,
+  ShowSeatsRequestDto,
+} from './dto/show-seats-response.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Shows')
 @Controller('shows')
@@ -64,5 +78,20 @@ export class ShowController {
   })
   async listMovies(@Query() query: ListShowsByTheaterQueryDto) {
     return this.showService.listShowsByTheater(query);
+  }
+
+  @Get('seats')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get seat availability for a show' })
+  @ApiResponse({
+    status: 200,
+    description: 'Seat availability for the show.',
+    type: [ShowSeatRowDto],
+  })
+  async getSeatAvailability(
+    @Query() query: ShowSeatsRequestDto,
+    @Req() req: { user?: { id: string } },
+  ) {
+    return this.showService.getSeatAvailability(query.showId, req.user?.id);
   }
 }

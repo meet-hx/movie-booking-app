@@ -18,7 +18,9 @@ import {
   MovieShowtimesResponseDto,
   TheaterShowtimesResponseDto,
 } from './dto/show-availability.dto';
+import { ShowSeatRowDto } from './dto/show-seats-response.dto';
 import { Strings } from '../../utils/strings';
+import { BookingStatus } from 'src/generated/prisma/enums';
 
 @Injectable()
 export class ShowService {
@@ -143,5 +145,63 @@ export class ShowService {
 
   findById(id: string) {
     return this.showRepository.findById(id);
+  }
+
+  async getSeatAvailability(
+    showId: string,
+    userId?: string,
+  ): Promise<ShowSeatRowDto[]> {
+    const data = await this.showRepository.getSeatAvailabilityData(showId);
+
+    if (!data) {
+      throw new NotFoundException(Strings.show.notFound);
+    }
+
+    const { allSeats, bookedSeats } = data;
+
+    const rowMap = new Map<string, ShowSeatRowDto>();
+
+    allSeats.forEach((seat) => {
+      let row = rowMap.get(seat.rowNumber);
+      if (!row) {
+        row = {
+          row: seat.rowNumber,
+          columns: [],
+        };
+        rowMap.set(seat.rowNumber, row);
+      }
+
+      const columns = seat.seatNumbers.map((seatNumber) => {
+        const booking = bookedSeats.find(
+          (bs) => bs.seatId === seat.id && bs.seatNumber === seatNumber,
+        );
+
+        let isAvailable = true;
+        if (booking) {
+          if (booking.bookingStatus === BookingStatus.CONFIRMED) {
+            isAvailable = false;
+          } else if (booking.bookingStatus === BookingStatus.RESERVED) {
+            // If reserved by someone else, it's not available
+            if (booking.userId !== userId) {
+              isAvailable = false;
+            }
+          }
+        }
+
+        return {
+          id: seatNumber,
+          isAvailable,
+        };
+      });
+
+      row.columns.push(...columns);
+    });
+
+    // Sort columns by seat number for each row
+    rowMap.forEach((row) => {
+      row.columns.sort((a, b) => a.id - b.id);
+    });
+
+    return Array.from(rowMap.values());
   }
 }

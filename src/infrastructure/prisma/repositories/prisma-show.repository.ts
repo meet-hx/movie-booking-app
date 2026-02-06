@@ -4,6 +4,7 @@ import {
   CreateShowData,
   ShowFilters,
   ShowWithDetails,
+  SeatAvailabilityData,
 } from '../../../domain/repositories/show/show.repository';
 import { Show } from 'src/generated/prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -189,5 +190,69 @@ export class PrismaShowRepository implements ShowRepository {
         },
       },
     });
+  }
+
+  async getSeatAvailabilityData(
+    showId: string,
+  ): Promise<SeatAvailabilityData | null> {
+    const show = await this.prisma.show.findUnique({
+      where: { id: showId },
+      select: {
+        theaterScreenId: true,
+      },
+    });
+
+    if (!show) {
+      return null;
+    }
+
+    const [allSeats, bookedSeats] = await Promise.all([
+      this.prisma.screenSeat.findMany({
+        where: { theaterScreenId: show.theaterScreenId },
+        select: {
+          id: true,
+          rowNumber: true,
+          seatNumbers: true,
+        },
+        orderBy: [{ rowNumber: 'asc' }],
+      }),
+      this.prisma.bookingSeat.findMany({
+        where: {
+          booking: {
+            showId: showId,
+          },
+          OR: [
+            { bookingStatus: 'CONFIRMED' },
+            {
+              bookingStatus: 'RESERVED',
+              booking: {
+                paymentStatus: 'PENDING',
+                expiresAt: { gt: new Date() },
+              },
+            },
+          ],
+        },
+        select: {
+          seatId: true,
+          seatNumber: true,
+          bookingStatus: true,
+          booking: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return {
+      allSeats,
+      bookedSeats: bookedSeats.map((bs) => ({
+        seatId: bs.seatId,
+        seatNumber: bs.seatNumber,
+        userId: bs.booking.userId,
+        bookingStatus: bs.bookingStatus,
+      })),
+    };
   }
 }
