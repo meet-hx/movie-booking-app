@@ -618,6 +618,16 @@ export class CreateBookingRequest {
 }
 ```
 
+### DTO Scalability Rules
+
+To maintain a scalable project, follow these mandatory DTO maintenance rules:
+
+1.  **Minimum 2 DTOs Per Operation**: Every endpoint operation (Create, Update, Get, etc.) MUST have at least two DTOs defined in its corresponding `.dto.ts` file:
+    - A **Request DTO** (e.g., `CreateSeatRequest`)
+    - A **Response DTO** (e.g., `CreateSeatResponse`)
+2.  **Single File Per Operation**: Keep the Request and Response DTOs for a single operation in the same file named `{action}-{entity}.dto.ts`.
+3.  **No Direct Entity Exposure**: Never return database entities directly. Always map them to a Response DTO to control what data is exposed.
+
 ### DTO Best Practices
 
 1. **Always validate input**: Use class-validator decorators on all Request DTOs
