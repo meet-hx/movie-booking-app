@@ -40,7 +40,8 @@ export class Strings {
   static booking = {
     seatNotFound: (options: { rowNumber: string; seatNumber: number }) =>
       `Seat ${options.rowNumber}${options.seatNumber} not found for this show.`,
-    seatAlreadyBooked: 'One or more seats are already booked.',
+    seatAlreadyBooked: (options: { seats: string[] }) =>
+      `Seats already reserved or booked: ${options.seats.join(', ')}.`,
     duplicateSeatSelection: 'Duplicate seats are not allowed in the request.',
     intentNotFound: 'Booking intent not found.',
     intentExpired: 'Booking intent has expired.',
