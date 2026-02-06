@@ -97,3 +97,13 @@ export type Booking = Prisma.BookingModel
  * 
  */
 export type BookingSeat = Prisma.BookingSeatModel
+/**
+ * Model PaymentIntent
+ * 
+ */
+export type PaymentIntent = Prisma.PaymentIntentModel
+/**
+ * Model WebhookEvent
+ * 
+ */
+export type WebhookEvent = Prisma.WebhookEventModel

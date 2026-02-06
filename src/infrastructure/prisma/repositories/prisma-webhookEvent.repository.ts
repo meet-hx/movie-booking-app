@@ -4,6 +4,7 @@ import {
   WebhookEventPayload,
   WebhookEventRepository,
 } from '../../../domain/repositories/webhookEvent/webhook-event.repository';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class PrismaWebhookEventRepository implements WebhookEventRepository {
@@ -23,7 +24,7 @@ export class PrismaWebhookEventRepository implements WebhookEventRepository {
       data: {
         id: payload.id,
         type: payload.type,
-        payload: payload.payload,
+        payload: payload.payload as unknown as Prisma.InputJsonValue,
       },
     });
   }

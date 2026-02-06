@@ -98,9 +98,7 @@ export class BookingService {
     const basePrice = show.basePrice.toNumber();
     const seatAmounts = orderedSelections.map((seat) => ({
       seatId: seat.id,
-      amount: this.roundAmount(
-        basePrice + seat.seatCategory.additionalPrice,
-      ),
+      amount: this.roundAmount(basePrice + seat.seatCategory.additionalPrice),
       bookingStatus: 'RESERVED' as const,
     }));
 
@@ -184,9 +182,8 @@ export class BookingService {
     userId: string,
     request: CreatePaymentIntentRequestDto,
   ): Promise<CreatePaymentIntentResponseDto> {
-    const booking = await this.bookingRepository.findByIdWithSeats(
-      bookingIntentId,
-    );
+    const booking =
+      await this.bookingRepository.findByIdWithSeats(bookingIntentId);
     if (!booking || booking.userId !== userId) {
       throw new NotFoundException(Strings.booking.intentNotFound);
     }
@@ -253,9 +250,8 @@ export class BookingService {
     bookingIntentId: string,
     userId: string,
   ): Promise<GetBookingStatusResponseDto> {
-    const booking = await this.bookingRepository.findByIdWithSeats(
-      bookingIntentId,
-    );
+    const booking =
+      await this.bookingRepository.findByIdWithSeats(bookingIntentId);
     if (!booking || booking.userId !== userId) {
       throw new NotFoundException(Strings.booking.intentNotFound);
     }

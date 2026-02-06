@@ -62,7 +62,9 @@ export const ModelName = {
   ScreenSeat: 'ScreenSeat',
   Show: 'Show',
   Booking: 'Booking',
-  BookingSeat: 'BookingSeat'
+  BookingSeat: 'BookingSeat',
+  PaymentIntent: 'PaymentIntent',
+  WebhookEvent: 'WebhookEvent'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -225,6 +227,7 @@ export const BookingScalarFieldEnum = {
   userId: 'userId',
   showId: 'showId',
   bookingTime: 'bookingTime',
+  expiresAt: 'expiresAt',
   totalAmount: 'totalAmount',
   serviceCharge: 'serviceCharge',
   paymentStatus: 'paymentStatus',
@@ -250,12 +253,56 @@ export const BookingSeatScalarFieldEnum = {
 export type BookingSeatScalarFieldEnum = (typeof BookingSeatScalarFieldEnum)[keyof typeof BookingSeatScalarFieldEnum]
 
 
+export const PaymentIntentScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  stripePaymentIntentId: 'stripePaymentIntentId',
+  clientSecret: 'clientSecret',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  rawEvent: 'rawEvent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type PaymentIntentScalarFieldEnum = (typeof PaymentIntentScalarFieldEnum)[keyof typeof PaymentIntentScalarFieldEnum]
+
+
+export const WebhookEventScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  payload: 'payload',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+} as const
+
+export type WebhookEventScalarFieldEnum = (typeof WebhookEventScalarFieldEnum)[keyof typeof WebhookEventScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -272,4 +319,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
