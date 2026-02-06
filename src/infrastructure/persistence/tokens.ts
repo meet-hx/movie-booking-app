@@ -10,4 +10,6 @@ export const REPOSITORY_TOKENS = {
   SeatCategoryRepository: Symbol('SeatCategoryRepository'),
   ScreenSeatRepository: Symbol('ScreenSeatRepository'),
   BookingSeatRepository: Symbol('BookingSeatRepository'),
+  PaymentIntentRepository: Symbol('PaymentIntentRepository'),
+  WebhookEventRepository: Symbol('WebhookEventRepository'),
 };

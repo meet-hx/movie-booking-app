@@ -52,6 +52,101 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
     });
   }
 
+  async findSeatDetailsByIds(
+    theaterScreenId: string,
+    seatIds: string[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumbers: number[];
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  > {
+    const seats = await this.prisma.screenSeat.findMany({
+      where: {
+        theaterScreenId,
+        id: { in: seatIds },
+      },
+      select: {
+        id: true,
+        rowNumber: true,
+        seatNumbers: true,
+        seatCategory: {
+          select: {
+            id: true,
+            name: true,
+            additionalPrice: true,
+          },
+        },
+      },
+    });
+
+    return seats.map((seat) => ({
+      id: seat.id,
+      rowNumber: seat.rowNumber,
+      seatNumbers: seat.seatNumbers,
+      seatCategory: {
+        id: seat.seatCategory.id,
+        name: seat.seatCategory.name,
+        additionalPrice: seat.seatCategory.additionalPrice.toNumber(),
+      },
+    }));
+  }
+
+  async findByScreenRowAndSeatNumber(
+    theaterScreenId: string,
+    rowNumber: string,
+    seatNumber: number,
+  ): Promise<{
+    id: string;
+    rowNumber: string;
+    seatNumber: number;
+    seatCategory: {
+      id: string;
+      name: string;
+      additionalPrice: number;
+    };
+  } | null> {
+    const seat = await this.prisma.screenSeat.findFirst({
+      where: {
+        theaterScreenId,
+        rowNumber,
+        seatNumbers: { has: seatNumber },
+      },
+      select: {
+        id: true,
+        rowNumber: true,
+        seatCategory: {
+          select: {
+            id: true,
+            name: true,
+            additionalPrice: true,
+          },
+        },
+      },
+    });
+
+    if (!seat) {
+      return null;
+    }
+
+    return {
+      id: seat.id,
+      rowNumber: seat.rowNumber,
+      seatNumber,
+      seatCategory: {
+        id: seat.seatCategory.id,
+        name: seat.seatCategory.name,
+        additionalPrice: seat.seatCategory.additionalPrice.toNumber(),
+      },
+    };
+  }
+
   async existsByScreenAndRow(
     theaterScreenId: string,
     rowNumber: string,

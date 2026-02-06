@@ -28,6 +28,15 @@ enum BookingStatus {
   CANCELLED
 }
 
+enum PaymentIntentStatus {
+  REQUIRES_PAYMENT_METHOD
+  REQUIRES_CONFIRMATION
+  REQUIRES_ACTION
+  PROCESSING
+  SUCCEEDED
+  CANCELED
+}
+
 model Movie {
   id          String          @id @default(uuid())
   title       String
@@ -196,12 +205,14 @@ model Booking {
   userId        String
   showId        String
   bookingTime   DateTime      @default(now())
+  expiresAt     DateTime
   totalAmount   Decimal       @db.Decimal(10, 2)
   serviceCharge Decimal       @db.Decimal(10, 2)
   paymentStatus PaymentStatus @default(PENDING)
   user          User          @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   show          Show          @relation(fields: [showId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   seats         BookingSeat[]
+  paymentIntents PaymentIntent[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt @default(now())
@@ -226,4 +237,35 @@ model BookingSeat {
 
   @@index([bookingId])
   @@index([seatId])
+}
+
+model PaymentIntent {
+  id                    String              @id @default(uuid())
+  bookingId             String
+  userId                String
+  stripePaymentIntentId String              @unique
+  clientSecret          String
+  status                PaymentIntentStatus
+  amount                Decimal             @db.Decimal(10, 2)
+  currency              String
+  rawEvent              Json?
+  booking               Booking             @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user                  User                @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt @default(now())
+  deletedAt DateTime?
+
+  @@index([bookingId])
+  @@index([userId])
+}
+
+model WebhookEvent {
+  id        String   @id
+  type      String
+  payload   Json
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt @default(now())
+  deletedAt DateTime?
 }
