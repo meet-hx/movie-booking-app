@@ -196,6 +196,7 @@ model Booking {
   userId        String
   showId        String
   bookingTime   DateTime      @default(now())
+  expiresAt     DateTime
   totalAmount   Decimal       @db.Decimal(10, 2)
   serviceCharge Decimal       @db.Decimal(10, 2)
   paymentStatus PaymentStatus @default(PENDING)

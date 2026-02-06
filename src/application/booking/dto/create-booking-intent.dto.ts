@@ -1,34 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  IsUUID,
-  Min,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
-
-export class SeatSelectionRequestDto {
-  @ApiProperty({
-    description: 'Seat row identifier',
-    example: 'A',
-  })
-  @IsString()
-  @IsNotEmpty()
-  row: string;
-
-  @ApiProperty({
-    description: 'Seat number within the row',
-    example: 1,
-    minimum: 1,
-  })
-  @IsInt()
-  @Min(1)
-  seatNo: number;
-}
+import { ArrayMinSize, IsArray, IsUUID } from 'class-validator';
 
 export class CreateBookingIntentRequestDto {
   @ApiProperty({
@@ -40,24 +11,29 @@ export class CreateBookingIntentRequestDto {
   showId: string;
 
   @ApiProperty({
-    description: 'Selected seats',
-    type: [SeatSelectionRequestDto],
+    description: 'Theater screen identifier',
+    example: '123e4567-e89b-12d3-a456-426614174111',
+    format: 'uuid',
+  })
+  @IsUUID()
+  screenId: string;
+
+  @ApiProperty({
+    description: 'Selected seat identifiers',
+    type: [String],
     isArray: true,
+    example: [
+      '123e4567-e89b-12d3-a456-426614174010',
+      '123e4567-e89b-12d3-a456-426614174011',
+    ],
   })
   @IsArray()
   @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => SeatSelectionRequestDto)
-  seats: SeatSelectionRequestDto[];
+  @IsUUID('4', { each: true })
+  seatIds: string[];
 }
 
 export class BookingIntentSeatResponseDto {
-  @ApiProperty({ description: 'Seat row identifier', example: 'A' })
-  row: string;
-
-  @ApiProperty({ description: 'Seat number within the row', example: 1 })
-  seatNo: number;
-
   @ApiProperty({
     description: 'Screen seat identifier',
     example: '123e4567-e89b-12d3-a456-426614174010',
@@ -72,6 +48,12 @@ export class BookingIntentSeatResponseDto {
 
   @ApiProperty({ description: 'Seat category name', example: 'Gold' })
   categoryName: string;
+
+  @ApiProperty({ description: 'Seat row identifier', example: 'A' })
+  rowNumber: string;
+
+  @ApiProperty({ description: 'Seat numbers for the seat group', example: [1] })
+  seatNumbers: number[];
 
   @ApiProperty({
     description: 'Price for this seat (base + category additional)',
@@ -123,6 +105,12 @@ export class CreateBookingIntentResponseDto {
   basePrice: number;
 
   @ApiProperty({
+    description: 'Screen identifier for the booking intent',
+    example: '123e4567-e89b-12d3-a456-426614174111',
+  })
+  screenId: string;
+
+  @ApiProperty({
     description: 'Selected seats with pricing details',
     type: [BookingIntentSeatResponseDto],
     isArray: true,
@@ -153,4 +141,10 @@ export class CreateBookingIntentResponseDto {
     example: 945,
   })
   payableAmount: number;
+
+  @ApiProperty({
+    description: 'Booking intent expiry timestamp',
+    example: '2024-01-15T10:45:00.000Z',
+  })
+  expiresAt: Date;
 }

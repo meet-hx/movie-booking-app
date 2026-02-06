@@ -18,6 +18,7 @@ import { SeatService } from '../seat/seat.service';
 @Injectable()
 export class BookingService {
   private static readonly SERVICE_CHARGE_RATE = 0.05;
+  private static readonly HOLD_MINUTES = 10;
 
   constructor(
     @Inject(REPOSITORY_TOKENS.BookingRepository)
@@ -35,44 +36,35 @@ export class BookingService {
       throw new NotFoundException(Strings.show.notFound);
     }
 
-    const uniqueSelections = new Set<string>();
-    for (const seat of request.seats) {
-      const key = `${seat.row}-${seat.seatNo}`;
-      if (uniqueSelections.has(key)) {
-        throw new BadRequestException(Strings.booking.duplicateSeatSelection);
-      }
-      uniqueSelections.add(key);
+    if (show.theaterScreenId !== request.screenId) {
+      throw new BadRequestException(Strings.theaterScreen.mismatch);
     }
 
-    const seatSelections = await Promise.all(
-      request.seats.map(async (seat) => {
-        const seatMatch =
-          await this.seatService.findSeatByRowAndSeatNumber(
-            show.theaterScreenId,
-            seat.row,
-            seat.seatNo,
-          );
+    const uniqueSelections = new Set<string>();
+    for (const seatId of request.seatIds) {
+      if (uniqueSelections.has(seatId)) {
+        throw new BadRequestException(Strings.booking.duplicateSeatSelection);
+      }
+      uniqueSelections.add(seatId);
+    }
 
-        if (!seatMatch) {
-          throw new NotFoundException(
-            Strings.booking.seatNotFound({
-              rowNumber: seat.row,
-              seatNumber: seat.seatNo,
-            }),
-          );
-        }
-
-        return {
-          ...seat,
-          seatId: seatMatch.id,
-          categoryId: seatMatch.seatCategory.id,
-          categoryName: seatMatch.seatCategory.name,
-          additionalPrice: seatMatch.seatCategory.additionalPrice,
-        };
-      }),
+    const seatSelections = await this.seatService.findSeatDetailsByIds(
+      request.screenId,
+      request.seatIds,
     );
 
-    const seatIds = seatSelections.map((seat) => seat.seatId);
+    const seatSelectionMap = new Map(
+      seatSelections.map((seat) => [seat.id, seat]),
+    );
+    const orderedSelections = request.seatIds.map((seatId) => {
+      const seat = seatSelectionMap.get(seatId);
+      if (!seat) {
+        throw new NotFoundException(Strings.screenSeat.notFound);
+      }
+      return seat;
+    });
+
+    const seatIds = orderedSelections.map((seat) => seat.id);
     const bookedSeatIds = await this.bookingRepository.findBookedSeatIds(
       request.showId,
       seatIds,
@@ -83,18 +75,20 @@ export class BookingService {
     }
 
     const basePrice = show.basePrice.toNumber();
-    const seatAmounts = seatSelections.map((seat) => ({
-      seatId: seat.seatId,
-      amount: this.roundAmount(basePrice + seat.additionalPrice),
+    const seatAmounts = orderedSelections.map((seat) => ({
+      seatId: seat.id,
+      amount: this.roundAmount(
+        basePrice + seat.seatCategory.additionalPrice,
+      ),
       bookingStatus: 'RESERVED' as const,
     }));
 
-    const seatResponse = seatSelections.map((seat, index) => ({
-      row: seat.row,
-      seatNo: seat.seatNo,
-      seatId: seat.seatId,
-      categoryId: seat.categoryId,
-      categoryName: seat.categoryName,
+    const seatResponse = orderedSelections.map((seat, index) => ({
+      seatId: seat.id,
+      categoryId: seat.seatCategory.id,
+      categoryName: seat.seatCategory.name,
+      rowNumber: seat.rowNumber,
+      seatNumbers: seat.seatNumbers,
       amount: seatAmounts[index].amount,
     }));
 
@@ -135,11 +129,15 @@ export class BookingService {
       totalSeatAmount * BookingService.SERVICE_CHARGE_RATE,
     );
     const payableAmount = this.roundAmount(totalSeatAmount + serviceAmount);
+    const expiresAt = new Date(
+      Date.now() + BookingService.HOLD_MINUTES * 60 * 1000,
+    );
 
     const booking = await this.bookingRepository.create({
       userId,
       showId: request.showId,
       bookingTime: new Date(),
+      expiresAt,
       totalAmount: payableAmount,
       serviceCharge: serviceAmount,
       paymentStatus: 'PENDING',
@@ -150,11 +148,13 @@ export class BookingService {
       bookingIntentId: booking.id,
       showId: booking.showId,
       basePrice,
+      screenId: request.screenId,
       seats: seatResponse,
       categoryAmounts: Array.from(categoryMap.values()),
       totalSeatAmount,
       serviceAmount,
       payableAmount,
+      expiresAt: booking.expiresAt,
     };
   }
 

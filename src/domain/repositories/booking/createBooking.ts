@@ -4,6 +4,7 @@ export interface CreateBookingPayload {
   userId: string;
   showId: string;
   bookingTime: Date;
+  expiresAt: Date;
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
@@ -15,6 +16,7 @@ export interface CreateBookingResult {
   userId: string;
   showId: string;
   bookingTime: Date;
+  expiresAt: Date;
   totalAmount: number;
   serviceCharge: number;
   paymentStatus: PaymentStatus;
