@@ -148,6 +148,7 @@ export class FeatureService {
 3. **Business Logic**: All business rules and validation go here
 4. **Error Handling**: Throw descriptive exceptions
 5. **Transactions**: Use Prisma transactions for multi-step operations
+6. **Service Composition**: Prefer calling other services over directly injecting their repositories to avoid duplicating business logic.
 
 ## Swagger Documentation
 

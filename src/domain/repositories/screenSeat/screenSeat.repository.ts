@@ -13,6 +13,20 @@ export interface ScreenSeatRepository {
   findById(id: string): Promise<ScreenSeat | null>;
   exists(id: string): Promise<boolean>;
   findByTheaterScreenId(theaterScreenId: string): Promise<ScreenSeat[]>;
+  findByScreenRowAndSeatNumber(
+    theaterScreenId: string,
+    rowNumber: string,
+    seatNumber: number,
+  ): Promise<{
+    id: string;
+    rowNumber: string;
+    seatNumber: number;
+    seatCategory: {
+      id: string;
+      name: string;
+      additionalPrice: number;
+    };
+  } | null>;
   existsByScreenAndRow(
     theaterScreenId: string,
     rowNumber: string,

@@ -45,4 +45,24 @@ export class PrismaBookingRepository implements BookingRepository {
       seats: booking.seats,
     };
   }
+
+  async findBookedSeatIds(
+    showId: string,
+    seatIds: string[],
+  ): Promise<string[]> {
+    const bookedSeats = await this.prisma.bookingSeat.findMany({
+      where: {
+        seatId: { in: seatIds },
+        bookingStatus: 'CONFIRMED',
+        booking: {
+          showId,
+        },
+      },
+      select: {
+        seatId: true,
+      },
+    });
+
+    return bookedSeats.map((seat) => seat.seatId);
+  }
 }

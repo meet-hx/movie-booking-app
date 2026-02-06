@@ -91,6 +91,27 @@ export class SeatService {
     return this.screenSeatRepository.findByTheaterScreenId(theaterScreenId);
   }
 
+  async findSeatByRowAndSeatNumber(
+    theaterScreenId: string,
+    rowNumber: string,
+    seatNumber: number,
+  ): Promise<{
+    id: string;
+    rowNumber: string;
+    seatNumber: number;
+    seatCategory: {
+      id: string;
+      name: string;
+      additionalPrice: number;
+    };
+  } | null> {
+    return this.screenSeatRepository.findByScreenRowAndSeatNumber(
+      theaterScreenId,
+      rowNumber,
+      seatNumber,
+    );
+  }
+
   async updateSeat(id: string, request: UpdateScreenSeatRequestDto) {
     const seat = await this.screenSeatRepository.findById(id);
     if (!seat) {
