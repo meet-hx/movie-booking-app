@@ -112,6 +112,27 @@ export class SeatService {
     );
   }
 
+  async findSeatDetailsByRowAndNumbers(
+    theaterScreenId: string,
+    selections: { rowNumber: string; seatNumber: number }[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumber: number;
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  > {
+    return this.screenSeatRepository.findSeatDetailsByRowAndNumbers(
+      theaterScreenId,
+      selections,
+    );
+  }
+
   async updateSeat(id: string, request: UpdateScreenSeatRequestDto) {
     const seat = await this.screenSeatRepository.findById(id);
     if (!seat) {

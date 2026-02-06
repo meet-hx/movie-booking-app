@@ -28,6 +28,7 @@ import {
   CreatePaymentIntentResponseDto,
 } from './dto/create-payment-intent.dto';
 import { GetBookingStatusResponseDto } from './dto/get-booking-status.dto';
+import { Decimal } from '@prisma/client/runtime/client';
 
 @Injectable()
 export class BookingService {
@@ -61,29 +62,20 @@ export class BookingService {
       throw new BadRequestException(Strings.theaterScreen.mismatch);
     }
 
-    const uniqueSelections = new Set<string>();
-    for (const seatId of request.seatIds) {
-      if (uniqueSelections.has(seatId)) {
-        throw new BadRequestException(Strings.booking.duplicateSeatSelection);
-      }
-      uniqueSelections.add(seatId);
+    const seatSelections =
+      await this.seatService.findSeatDetailsByRowAndNumbers(
+        request.screenId,
+        request.seats.map((s) => ({
+          rowNumber: s.row,
+          seatNumber: parseInt(s.seatNo, 10),
+        })),
+      );
+
+    if (seatSelections.length !== request.seats.length) {
+      throw new NotFoundException(Strings.screenSeat.notFound);
     }
 
-    const seatSelections = await this.seatService.findSeatDetailsByIds(
-      request.screenId,
-      request.seatIds,
-    );
-
-    const seatSelectionMap = new Map(
-      seatSelections.map((seat) => [seat.id, seat]),
-    );
-    const orderedSelections = request.seatIds.map((seatId) => {
-      const seat = seatSelectionMap.get(seatId);
-      if (!seat) {
-        throw new NotFoundException(Strings.screenSeat.notFound);
-      }
-      return seat;
-    });
+    const orderedSelections = seatSelections;
 
     const seatIds = orderedSelections.map((seat) => seat.id);
     const bookedSeatIds = await this.bookingRepository.findBookedSeatIds(
@@ -99,7 +91,7 @@ export class BookingService {
     const seatAmounts = orderedSelections.map((seat) => ({
       seatId: seat.id,
       amount: this.roundAmount(basePrice + seat.seatCategory.additionalPrice),
-      bookingStatus: 'RESERVED' as const,
+      bookingStatus: BookingStatus.RESERVED,
     }));
 
     const seatResponse = orderedSelections.map((seat, index) => ({
@@ -107,7 +99,7 @@ export class BookingService {
       categoryId: seat.seatCategory.id,
       categoryName: seat.seatCategory.name,
       rowNumber: seat.rowNumber,
-      seatNumbers: seat.seatNumbers,
+      seatNumbers: [seat.seatNumber],
       amount: seatAmounts[index].amount,
     }));
 
@@ -159,8 +151,12 @@ export class BookingService {
       expiresAt,
       totalAmount: payableAmount,
       serviceCharge: serviceAmount,
-      paymentStatus: 'PENDING',
-      seats: seatAmounts,
+      paymentStatus: PaymentStatus.PENDING,
+      seats: seatAmounts.map((seat) => ({
+        seatId: seat.seatId,
+        amount: Decimal(seat.amount),
+        bookingStatus: BookingStatus.RESERVED,
+      })),
     });
 
     return {
@@ -373,7 +369,7 @@ export class BookingService {
     }
 
     this.stripeClient = new Stripe(secretKey, {
-      apiVersion: '2024-12-18.acacia',
+      apiVersion: '2024-06-20',
     });
 
     return this.stripeClient;

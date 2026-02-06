@@ -5,18 +5,16 @@ import {
   Headers,
   Param,
   Post,
-  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Request as ExpressRequest } from 'express';
 import { BookingService } from './booking.service';
 import {
   CreateBookingIntentRequestDto,
   CreateBookingIntentResponseDto,
 } from './dto/create-booking-intent.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
 import {
   CreatePaymentIntentRequestDto,
   CreatePaymentIntentResponseDto,
@@ -29,6 +27,7 @@ import {
   StripeWebhookRequestDto,
   StripeWebhookResponseDto,
 } from './dto/stripe-webhook.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Bookings')
 @Controller('bookings')
@@ -96,9 +95,9 @@ export class BookingController {
     type: StripeWebhookResponseDto,
   })
   async handleWebhook(
-    @Req() req: ExpressRequest,
-    @Headers('stripe-signature') signature: string | undefined,
+    @Body() body: any,
+    @Headers('stripe-signature') signature: string,
   ): Promise<StripeWebhookResponseDto> {
-    return this.bookingService.handleStripeWebhook(req.body, signature);
+    return this.bookingService.handleStripeWebhook(body, signature);
   }
 }

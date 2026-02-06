@@ -24,9 +24,9 @@ export class PrismaBookingRepository implements BookingRepository {
         seats: {
           createMany: {
             data: payload.seats.map((seat) => ({
-              seatId: seat.seatId,
-              amount: seat.amount,
-              bookingStatus: seat.bookingStatus,
+              seatId: seat.seatId!,
+              amount: seat.amount!,
+              bookingStatus: seat.bookingStatus!,
             })),
           },
         },

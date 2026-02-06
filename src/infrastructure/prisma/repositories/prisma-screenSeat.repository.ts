@@ -147,6 +147,79 @@ export class PrismaScreenSeatRepository implements ScreenSeatRepository {
     };
   }
 
+  async findSeatDetailsByRowAndNumbers(
+    theaterScreenId: string,
+    selections: { rowNumber: string; seatNumber: number }[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumber: number;
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  > {
+    const seats = await this.prisma.screenSeat.findMany({
+      where: {
+        theaterScreenId,
+        OR: selections.map((s) => ({
+          rowNumber: s.rowNumber,
+          seatNumbers: { has: s.seatNumber },
+        })),
+      },
+      select: {
+        id: true,
+        rowNumber: true,
+        seatNumbers: true,
+        seatCategory: {
+          select: {
+            id: true,
+            name: true,
+            additionalPrice: true,
+          },
+        },
+      },
+    });
+
+    // Since one ScreenSeat can have multiple seat numbers, we need to map back to the requested seatNumber
+    const result: {
+      id: string;
+      rowNumber: string;
+      seatNumber: number;
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[] = [];
+
+    for (const selection of selections) {
+      const match = seats.find(
+        (seat) =>
+          seat.rowNumber === selection.rowNumber &&
+          seat.seatNumbers.includes(selection.seatNumber),
+      );
+
+      if (match) {
+        result.push({
+          id: match.id,
+          rowNumber: match.rowNumber,
+          seatNumber: selection.seatNumber,
+          seatCategory: {
+            id: match.seatCategory.id,
+            name: match.seatCategory.name,
+            additionalPrice: match.seatCategory.additionalPrice.toNumber(),
+          },
+        });
+      }
+    }
+
+    return result;
+  }
+
   async existsByScreenAndRow(
     theaterScreenId: string,
     rowNumber: string,

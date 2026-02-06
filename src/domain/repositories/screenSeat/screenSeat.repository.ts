@@ -42,6 +42,21 @@ export interface ScreenSeatRepository {
       additionalPrice: number;
     };
   } | null>;
+  findSeatDetailsByRowAndNumbers(
+    theaterScreenId: string,
+    selections: { rowNumber: string; seatNumber: number }[],
+  ): Promise<
+    {
+      id: string;
+      rowNumber: string;
+      seatNumber: number;
+      seatCategory: {
+        id: string;
+        name: string;
+        additionalPrice: number;
+      };
+    }[]
+  >;
   existsByScreenAndRow(
     theaterScreenId: string,
     rowNumber: string,

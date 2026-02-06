@@ -4,7 +4,6 @@ import { AppModule } from './app.module';
 import { PrismaService } from './infrastructure/prisma/prisma.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
-import { raw } from 'express';
 import { CommonExceptionFilter } from './utils/common-exception.filter';
 import { CommonResponseInterceptor } from './utils/common-response.interceptor';
 
@@ -18,7 +17,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  app.use('/bookings/webhook', raw({ type: 'application/json' }));
+  // app.use('/bookings/webhook', raw({ type: 'application/json' }));
   app.use(cookieParser());
   app.useGlobalFilters(new CommonExceptionFilter());
   app.useGlobalInterceptors(new CommonResponseInterceptor());

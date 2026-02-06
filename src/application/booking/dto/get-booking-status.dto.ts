@@ -59,5 +59,5 @@ export class GetBookingStatusResponseDto {
     type: [BookingSeatStatusResponseDto],
     isArray: true,
   })
-  seats: BookingSeatStatusResponseDto[];
+  seats: Partial<BookingSeatStatusResponseDto>[];
 }

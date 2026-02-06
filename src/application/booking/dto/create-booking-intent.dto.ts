@@ -1,5 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMinSize, IsArray, IsUUID } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class SeatSelectionDto {
+  @ApiProperty({ description: 'Seat row identifier', example: 'A' })
+  @IsString()
+  @IsNotEmpty()
+  row: string;
+
+  @ApiProperty({ description: 'Seat number', example: '1' })
+  @IsString()
+  @IsNotEmpty()
+  seatNo: string;
+}
 
 export class CreateBookingIntentRequestDto {
   @ApiProperty({
@@ -19,18 +39,19 @@ export class CreateBookingIntentRequestDto {
   screenId: string;
 
   @ApiProperty({
-    description: 'Selected seat identifiers',
-    type: [String],
+    description: 'Selected seats',
+    type: [SeatSelectionDto],
     isArray: true,
     example: [
-      '123e4567-e89b-12d3-a456-426614174010',
-      '123e4567-e89b-12d3-a456-426614174011',
+      { row: 'A', seatNo: '1' },
+      { row: 'A', seatNo: '2' },
     ],
   })
   @IsArray()
   @ArrayMinSize(1)
-  @IsUUID('4', { each: true })
-  seatIds: string[];
+  @ValidateNested({ each: true })
+  @Type(() => SeatSelectionDto)
+  seats: SeatSelectionDto[];
 }
 
 export class BookingIntentSeatResponseDto {
