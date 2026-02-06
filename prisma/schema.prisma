@@ -227,6 +227,7 @@ model BookingSeat {
   id            String        @id @default(uuid())
   bookingId     String
   seatId        String
+  seatNumber    Int           @default(0)
   amount        Decimal       @db.Decimal(10, 2)
   bookingStatus BookingStatus @default(RESERVED)
   booking       Booking       @relation(fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
