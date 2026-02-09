@@ -5,6 +5,7 @@ import {
   Headers,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -23,6 +24,10 @@ import {
   GetBookingStatusParamsDto,
   GetBookingStatusResponseDto,
 } from './dto/get-booking-status.dto';
+import {
+  BookingHistoryRequestDto,
+  PaginatedBookingHistoryResponseDto,
+} from './dto/get-booking-history.dto';
 import {
   StripeWebhookRequestDto,
   StripeWebhookResponseDto,
@@ -84,6 +89,25 @@ export class BookingController {
     @Request() req: { user: { id: string } },
   ): Promise<GetBookingStatusResponseDto> {
     return this.bookingService.getBookingStatus(params.id, req.user.id);
+  }
+
+  @Get('history')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get booking history for the current user' })
+  @ApiResponse({
+    status: 200,
+    description: 'Booking history retrieved successfully.',
+    type: PaginatedBookingHistoryResponseDto,
+  })
+  async getBookingHistory(
+    @Query() query: BookingHistoryRequestDto,
+    @Request() req: { user: { id: string } },
+  ): Promise<PaginatedBookingHistoryResponseDto> {
+    return this.bookingService.getBookingHistory(
+      req.user.id,
+      query.page,
+      query.limit,
+    );
   }
 
   @Post('webhook')

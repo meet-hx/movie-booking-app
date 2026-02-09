@@ -6,6 +6,7 @@ import {
   CreateBookingPayload,
   CreateBookingResult,
 } from '../../../domain/repositories/booking/createBooking';
+import { BookingHistoryResult } from '../../../domain/repositories/booking/booking-history';
 
 @Injectable()
 export class PrismaBookingRepository implements BookingRepository {
@@ -73,6 +74,70 @@ export class PrismaBookingRepository implements BookingRepository {
       paymentStatus: booking.paymentStatus,
       seats: booking.seats,
     };
+  }
+
+  async findByUserIdWithDetails(
+    userId: string,
+    skip?: number,
+    take?: number,
+  ): Promise<{ data: BookingHistoryResult[]; total: number }> {
+    const where = {
+      userId,
+      paymentStatus: { not: PaymentStatus.PENDING },
+    };
+    const [bookings, total] = await this.prisma.$transaction([
+      this.prisma.booking.findMany({
+        where,
+        include: {
+          show: {
+            include: {
+              movie: true,
+              theater: true,
+            },
+          },
+          seats: {
+            include: {
+              seat: true,
+            },
+          },
+        },
+        orderBy: {
+          bookingTime: 'desc',
+        },
+        skip,
+        take,
+      }),
+      this.prisma.booking.count({
+        where,
+      }),
+    ]);
+
+    const data = bookings.map((booking) => ({
+      id: booking.id,
+      bookingTime: booking.bookingTime,
+      totalAmount: booking.totalAmount.toNumber(),
+      paymentStatus: booking.paymentStatus,
+      show: {
+        id: booking.show.id,
+        startTime: booking.show.startTime,
+        movie: {
+          title: booking.show.movie.title,
+        },
+        theater: {
+          name: booking.show.theater.name,
+        },
+      },
+      seats: booking.seats.map((seat) => ({
+        seatNumber: seat.seatNumber,
+        amount: seat.amount.toNumber(),
+        bookingStatus: seat.bookingStatus,
+        seat: {
+          rowNumber: seat.seat.rowNumber,
+        },
+      })),
+    }));
+
+    return { data, total };
   }
 
   async findConflictingSeats(

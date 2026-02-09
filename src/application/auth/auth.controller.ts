@@ -10,7 +10,6 @@ import {
 import { AuthService } from './auth.service';
 import { SignInDtoRequest, SignInDtoResponse } from './dto/sign-in.dto';
 import type { Response } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDtoRequest } from '../user/dto/create-user.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from './local-auth.guard';
@@ -38,7 +37,7 @@ export class AuthController {
     );
     res.cookie('token', userSignin.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 7,
     });
@@ -54,23 +53,26 @@ export class AuthController {
     description: 'User signed in successfully',
     type: SignInDtoResponse,
   })
-  async signInLocal(
-    @Request() req,
+  signInLocal(
+    @Request() req: { user: SignInDtoResponse },
     @Res({ passthrough: true }) res: Response,
-  ): Promise<SignInDtoResponse> {
+  ): SignInDtoResponse {
     res.cookie('token', req.user.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 7,
     });
     return req.user;
   }
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async logout(@Request() req) {
-    return req.logout();
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 200, description: 'User logged out successfully' })
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+    return { message: 'Logged out successfully' };
   }
 
   @Post('sign-up')
@@ -83,7 +85,7 @@ export class AuthController {
     const userSignup = await this.authService.signUp(signupDto);
     res.cookie('token', userSignup.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 * 7,
     });
@@ -97,7 +99,7 @@ export class AuthController {
     status: 200,
     description: 'User profile retrieved successfully',
   })
-  getProfile(@Request() req) {
-    return req.user;
+  getProfile(@Request() req: { user: any }) {
+    return req.user as Record<string, any>;
   }
 }

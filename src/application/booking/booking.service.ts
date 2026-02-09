@@ -28,6 +28,8 @@ import {
   CreatePaymentIntentResponseDto,
 } from './dto/create-payment-intent.dto';
 import { GetBookingStatusResponseDto } from './dto/get-booking-status.dto';
+import { PaginatedBookingHistoryResponseDto } from './dto/get-booking-history.dto';
+
 import { Decimal } from '@prisma/client/runtime/client';
 
 @Injectable()
@@ -276,6 +278,42 @@ export class BookingService {
         status: seat.bookingStatus,
         amount: Number(seat.amount),
       })),
+    };
+  }
+
+  async getBookingHistory(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedBookingHistoryResponseDto> {
+    const skip = (page - 1) * limit;
+    const { data, total } =
+      await this.bookingRepository.findByUserIdWithDetails(userId, skip, limit);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      docs: data.map((item) => ({
+        id: item.id,
+        bookingTime: item.bookingTime,
+        totalAmount: item.totalAmount,
+        paymentStatus: item.paymentStatus,
+        show: {
+          id: item.show.id,
+          startTime: item.show.startTime,
+          movieTitle: item.show.movie.title,
+          theaterName: item.show.theater.name,
+        },
+        seats: item.seats.map((seat) => ({
+          seatLabel: `${seat.seat.rowNumber}${seat.seatNumber}`,
+          amount: seat.amount,
+          status: seat.bookingStatus,
+        })),
+      })),
+      totalPages,
+      totalCount: total,
+      currentPage: page,
+      limit,
     };
   }
 
