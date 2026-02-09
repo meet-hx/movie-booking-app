@@ -6,8 +6,25 @@ import {
   IsString,
   IsUUID,
   ValidateNested,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
+  Validate,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
+@ValidatorConstraint({ name: 'uniqueSeats', async: false })
+export class UniqueSeatsConstraint implements ValidatorConstraintInterface {
+  validate(seats: SeatSelectionDto[], args: ValidationArguments) {
+    const seatKeys = seats.map((seat) => `${seat.row}-${seat.seatNo}`);
+    const uniqueSeatKeys = new Set(seatKeys);
+    return seatKeys.length === uniqueSeatKeys.size;
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    return 'Duplicate seats are not allowed in a single booking request';
+  }
+}
 
 export class SeatSelectionDto {
   @ApiProperty({ description: 'Seat row identifier', example: 'A' })
@@ -42,6 +59,7 @@ export class CreateBookingIntentRequestDto {
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })
+  @Validate(UniqueSeatsConstraint)
   @Type(() => SeatSelectionDto)
   seats: SeatSelectionDto[];
 }

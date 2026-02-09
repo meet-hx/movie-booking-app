@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -44,6 +45,20 @@ export class SeatCategoryService {
 
   async create(request: CreateSeatCategoryRequestDto) {
     await this.theaterScreenService.ensureScreenExists(request.theaterScreenId);
+
+    // Check for duplicate seat category name within the same screen
+    const existingCategories =
+      await this.seatCategoryRepository.findByTheaterScreenId(
+        request.theaterScreenId,
+      );
+    const duplicateCategory = existingCategories.find(
+      (category) => category.name.toLowerCase() === request.name.toLowerCase(),
+    );
+
+    if (duplicateCategory) {
+      throw new ConflictException(Strings.seatCategory.duplicateName);
+    }
+
     return this.createCategory(request);
   }
 
@@ -65,7 +80,26 @@ export class SeatCategoryService {
     }
 
     if (request.theaterScreenId) {
-      await this.theaterScreenService.ensureScreenExists(request.theaterScreenId);
+      await this.theaterScreenService.ensureScreenExists(
+        request.theaterScreenId,
+      );
+    }
+
+    // Check for duplicate seat category name if name is being updated
+    if (request.name && request.theaterScreenId) {
+      const existingCategories =
+        await this.seatCategoryRepository.findByTheaterScreenId(
+          request.theaterScreenId,
+        );
+      const duplicateCategory = existingCategories.find(
+        (category) =>
+          category.name.toLowerCase() === request.name!.toLowerCase() &&
+          category.id !== request.id,
+      );
+
+      if (duplicateCategory) {
+        throw new ConflictException(Strings.seatCategory.duplicateName);
+      }
     }
 
     return this.seatCategoryRepository.update(request.id, {

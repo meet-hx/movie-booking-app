@@ -25,6 +25,8 @@ export class Strings {
       `Seat category ${options.id} not found.`,
     mismatch: (options: { categoryId: string; theaterScreenId: string }) =>
       `Seat category ${options.categoryId} does not belong to screen ${options.theaterScreenId}.`,
+    duplicateName:
+      'Seat category name must be unique within the same theater screen',
   };
   static movie = {
     notFound: 'Movie not found.',
