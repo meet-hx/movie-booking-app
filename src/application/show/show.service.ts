@@ -18,7 +18,11 @@ import {
   MovieShowtimesResponseDto,
   TheaterShowtimesResponseDto,
 } from './dto/show-availability.dto';
-import { ShowSeatRowDto } from './dto/show-seats-response.dto';
+import {
+  ShowSeatRowDto,
+  ShowSeatCategoryDto,
+  ShowSeatsResponseDto,
+} from './dto/show-seats-response.dto';
 import { Strings } from '../../utils/strings';
 import { BookingStatus } from 'src/generated/prisma/enums';
 
@@ -150,58 +154,81 @@ export class ShowService {
   async getSeatAvailability(
     showId: string,
     userId?: string,
-  ): Promise<ShowSeatRowDto[]> {
+  ): Promise<ShowSeatsResponseDto> {
     const data = await this.showRepository.getSeatAvailabilityData(showId);
 
     if (!data) {
       throw new NotFoundException(Strings.show.notFound);
     }
 
-    const { allSeats, bookedSeats } = data;
+    const { allSeats, bookedSeats, seatCategories, basePrice } = data;
 
-    const rowMap = new Map<string, ShowSeatRowDto>();
+    const categoryMap = new Map<string, ShowSeatCategoryDto>();
 
-    allSeats.forEach((seat) => {
-      let row = rowMap.get(seat.rowNumber);
-      if (!row) {
-        row = {
-          row: seat.rowNumber,
-          columns: [],
-        };
-        rowMap.set(seat.rowNumber, row);
-      }
+    // Group seats by category and organize by rows
+    seatCategories.forEach((category) => {
+      const categorySeats = allSeats.filter(
+        (seat) => seat.seatCategoryId === category.id,
+      );
 
-      const columns = seat.seatNumbers.map((seatNumber) => {
-        const booking = bookedSeats.find(
-          (bs) => bs.seatId === seat.id && bs.seatNumber === seatNumber,
-        );
+      const rowMap = new Map<string, ShowSeatRowDto>();
 
-        let isAvailable = true;
-        if (booking) {
-          if (booking.bookingStatus === BookingStatus.CONFIRMED) {
-            isAvailable = false;
-          } else if (booking.bookingStatus === BookingStatus.RESERVED) {
-            // If reserved by someone else, it's not available
-            if (booking.userId !== userId) {
-              isAvailable = false;
-            }
-          }
+      categorySeats.forEach((seat) => {
+        let row = rowMap.get(seat.rowNumber);
+        if (!row) {
+          row = {
+            row: seat.rowNumber,
+            columns: [],
+          };
+          rowMap.set(seat.rowNumber, row);
         }
 
-        return {
-          id: seatNumber,
-          isAvailable,
-        };
+        const columns = seat.seatNumbers.map((seatNumber) => {
+          const booking = bookedSeats.find(
+            (bs) => bs.seatId === seat.id && bs.seatNumber === seatNumber,
+          );
+
+          let isAvailable = true;
+          if (booking) {
+            if (booking.bookingStatus === BookingStatus.CONFIRMED) {
+              isAvailable = false;
+            } else if (booking.bookingStatus === BookingStatus.RESERVED) {
+              // If reserved by someone else, it's not available
+              if (booking.userId !== userId) {
+                isAvailable = false;
+              }
+            }
+          }
+
+          return {
+            id: seatNumber,
+            isAvailable,
+          };
+        });
+
+        row.columns.push(...columns);
       });
 
-      row.columns.push(...columns);
+      // Sort columns by seat number for each row
+      rowMap.forEach((row) => {
+        row.columns.sort((a, b) => a.id - b.id);
+      });
+
+      const categoryDto: ShowSeatCategoryDto = {
+        title: category.name,
+        price: basePrice + category.additionalPrice,
+        rows: Array.from(rowMap.values()).sort((a, b) =>
+          a.row.localeCompare(b.row),
+        ),
+      };
+
+      categoryMap.set(category.id, categoryDto);
     });
 
-    // Sort columns by seat number for each row
-    rowMap.forEach((row) => {
-      row.columns.sort((a, b) => a.id - b.id);
-    });
-
-    return Array.from(rowMap.values());
+    return {
+      categories: Array.from(categoryMap.values()).sort((a, b) =>
+        a.title.localeCompare(b.title),
+      ),
+    };
   }
 }

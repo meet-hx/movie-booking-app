@@ -25,3 +25,19 @@ export class ShowSeatRowDto {
   @ApiProperty({ type: [ShowSeatColumnDto] })
   columns: ShowSeatColumnDto[];
 }
+
+export class ShowSeatCategoryDto {
+  @ApiProperty({ example: 'Premium' })
+  title: string;
+
+  @ApiProperty({ example: 15.5 })
+  price: number;
+
+  @ApiProperty({ type: [ShowSeatRowDto] })
+  rows: ShowSeatRowDto[];
+}
+
+export class ShowSeatsResponseDto {
+  @ApiProperty({ type: [ShowSeatCategoryDto] })
+  categories: ShowSeatCategoryDto[];
+}

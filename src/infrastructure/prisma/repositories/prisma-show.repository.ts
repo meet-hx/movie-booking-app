@@ -199,6 +199,7 @@ export class PrismaShowRepository implements ShowRepository {
       where: { id: showId },
       select: {
         theaterScreenId: true,
+        basePrice: true,
       },
     });
 
@@ -206,13 +207,21 @@ export class PrismaShowRepository implements ShowRepository {
       return null;
     }
 
-    const [allSeats, bookedSeats] = await Promise.all([
+    const [allSeats, bookedSeats, seatCategories] = await Promise.all([
       this.prisma.screenSeat.findMany({
         where: { theaterScreenId: show.theaterScreenId },
         select: {
           id: true,
           rowNumber: true,
           seatNumbers: true,
+          seatCategoryId: true,
+          seatCategory: {
+            select: {
+              id: true,
+              name: true,
+              additionalPrice: true,
+            },
+          },
         },
         orderBy: [{ rowNumber: 'asc' }],
       }),
@@ -243,16 +252,40 @@ export class PrismaShowRepository implements ShowRepository {
           },
         },
       }),
+      this.prisma.seatCategory.findMany({
+        where: { theaterScreenId: show.theaterScreenId },
+        select: {
+          id: true,
+          name: true,
+          additionalPrice: true,
+        },
+      }),
     ]);
 
     return {
-      allSeats,
+      allSeats: allSeats.map((seat) => ({
+        id: seat.id,
+        rowNumber: seat.rowNumber,
+        seatNumbers: seat.seatNumbers,
+        seatCategoryId: seat.seatCategoryId,
+        seatCategory: {
+          id: seat.seatCategory.id,
+          name: seat.seatCategory.name,
+          additionalPrice: seat.seatCategory.additionalPrice.toNumber(),
+        },
+      })),
       bookedSeats: bookedSeats.map((bs) => ({
         seatId: bs.seatId,
         seatNumber: bs.seatNumber,
         userId: bs.booking.userId,
         bookingStatus: bs.bookingStatus,
       })),
+      seatCategories: seatCategories.map((category) => ({
+        id: category.id,
+        name: category.name,
+        additionalPrice: category.additionalPrice.toNumber(),
+      })),
+      basePrice: show.basePrice.toNumber(),
     };
   }
 }

@@ -22,8 +22,8 @@ import {
   TheaterShowtimesResponseDto,
 } from './dto/show-availability.dto';
 import {
-  ShowSeatRowDto,
   ShowSeatsRequestDto,
+  ShowSeatsResponseDto,
 } from './dto/show-seats-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
@@ -86,7 +86,7 @@ export class ShowController {
   @ApiResponse({
     status: 200,
     description: 'Seat availability for the show.',
-    type: [ShowSeatRowDto],
+    type: ShowSeatsResponseDto,
   })
   async getSeatAvailability(
     @Query() query: ShowSeatsRequestDto,

@@ -47,6 +47,12 @@ export interface SeatAvailabilityData {
     id: string;
     rowNumber: string;
     seatNumbers: number[];
+    seatCategoryId: string;
+    seatCategory: {
+      id: string;
+      name: string;
+      additionalPrice: number;
+    };
   }[];
   bookedSeats: {
     seatId: string;
@@ -54,6 +60,12 @@ export interface SeatAvailabilityData {
     userId: string;
     bookingStatus: string;
   }[];
+  seatCategories: {
+    id: string;
+    name: string;
+    additionalPrice: number;
+  }[];
+  basePrice: number;
 }
 
 export interface ShowRepository {
