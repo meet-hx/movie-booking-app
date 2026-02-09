@@ -11,8 +11,7 @@ import { AuthService } from './auth.service';
 import { SignInDtoRequest, SignInDtoResponse } from './dto/sign-in.dto';
 import type { Response } from 'express';
 import { CreateUserDtoRequest } from '../user/dto/create-user.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { LocalAuthGuard } from './local-auth.guard';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @ApiTags('Auth')
@@ -44,27 +43,27 @@ export class AuthController {
     return userSignin;
   }
 
-  @UseGuards(LocalAuthGuard)
-  @Post('sign-in-local')
-  @ApiOperation({ summary: 'Sign in user (Local Strategy)' })
-  @ApiBody({ type: SignInDtoRequest })
-  @ApiResponse({
-    status: 200,
-    description: 'User signed in successfully',
-    type: SignInDtoResponse,
-  })
-  signInLocal(
-    @Request() req: { user: SignInDtoResponse },
-    @Res({ passthrough: true }) res: Response,
-  ): SignInDtoResponse {
-    res.cookie('token', req.user.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 7,
-    });
-    return req.user;
-  }
+  // @UseGuards(LocalAuthGuard)
+  // @Post('sign-in-local')
+  // @ApiOperation({ summary: 'Sign in user (Local Strategy)' })
+  // @ApiBody({ type: SignInDtoRequest })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'User signed in successfully',
+  //   type: SignInDtoResponse,
+  // })
+  // signInLocal(
+  //   @Request() req: { user: SignInDtoResponse },
+  //   @Res({ passthrough: true }) res: Response,
+  // ): SignInDtoResponse {
+  //   res.cookie('token', req.user.token, {
+  //     httpOnly: true,
+  //     secure: process.env.NODE_ENV === 'production',
+  //     sameSite: 'strict',
+  //     maxAge: 60 * 60 * 24 * 7,
+  //   });
+  //   return req.user;
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
