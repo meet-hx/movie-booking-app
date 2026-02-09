@@ -321,23 +321,68 @@ export class BookingService {
     const totalPages = Math.ceil(total / limit);
 
     return {
-      docs: data.map((item) => ({
-        id: item.id,
-        bookingTime: item.bookingTime,
-        totalAmount: item.totalAmount,
-        paymentStatus: item.paymentStatus,
-        show: {
-          id: item.show.id,
-          startTime: item.show.startTime,
-          movieTitle: item.show.movie.title,
-          theaterName: item.show.theater.name,
-        },
-        seats: item.seats.map((seat) => ({
-          seatLabel: `${seat.seat.rowNumber}${seat.seatNumber}`,
-          amount: seat.amount,
-          status: seat.bookingStatus,
-        })),
-      })),
+      docs: data.map((item) => {
+        // Group seats by category for categoryAmounts
+        const categoryMap = new Map<
+          string,
+          {
+            categoryId: string;
+            categoryName: string;
+            seatCount: number;
+            totalAmount: number;
+            pricePerSeat: number;
+          }
+        >();
+
+        // Transform seats and group by category
+        const transformedSeats = item.seats.map((seat) => {
+          const categoryId = seat.seat.seatCategoryId;
+          const categoryName = seat.seat.seatCategory.name;
+
+          // Update category map
+          if (!categoryMap.has(categoryId)) {
+            categoryMap.set(categoryId, {
+              categoryId,
+              categoryName,
+              seatCount: 0,
+              totalAmount: 0,
+              pricePerSeat: seat.amount,
+            });
+          }
+
+          const category = categoryMap.get(categoryId)!;
+          category.seatCount += 1;
+          category.totalAmount += seat.amount;
+
+          return {
+            seatId: seat.seatId,
+            categoryId: categoryId,
+            categoryName: categoryName,
+            rowNumber: seat.seat.rowNumber,
+            seatNumber: seat.seatNumber,
+            amount: seat.amount,
+          };
+        });
+
+        const categoryAmounts = Array.from(categoryMap.values());
+
+        return {
+          id: item.id,
+          bookingTime: item.bookingTime,
+          totalSeatAmount: item.totalAmount - item.serviceCharge,
+          serviceAmount: item.serviceCharge,
+          payableAmount: item.totalAmount,
+          paymentStatus: item.paymentStatus,
+          show: {
+            id: item.show.id,
+            startTime: item.show.startTime,
+            movieTitle: item.show.movie.title,
+            theaterName: item.show.theater.name,
+          },
+          seats: transformedSeats,
+          categoryAmounts: categoryAmounts,
+        };
+      }),
       totalPages,
       totalCount: total,
       currentPage: page,

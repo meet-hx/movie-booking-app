@@ -4,6 +4,8 @@ export interface BookingHistoryResult {
   id: string;
   bookingTime: Date;
   totalAmount: number;
+  serviceCharge: number;
+  expiresAt: Date;
   paymentStatus: PaymentStatus;
   show: {
     id: string;
@@ -16,11 +18,18 @@ export interface BookingHistoryResult {
     };
   };
   seats: {
+    seatId: string;
     seatNumber: number;
     amount: number;
     bookingStatus: BookingStatus;
     seat: {
+      id: string;
       rowNumber: string;
+      seatCategoryId: string;
+      seatCategory: {
+        id: string;
+        name: string;
+      };
     };
   }[];
 }

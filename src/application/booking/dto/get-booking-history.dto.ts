@@ -34,13 +34,39 @@ export class BookingHistoryShowDto {
 
 export class BookingHistorySeatDto {
   @ApiProperty()
-  seatLabel: string;
+  seatId: string;
+
+  @ApiProperty()
+  categoryId: string;
+
+  @ApiProperty()
+  categoryName: string;
+
+  @ApiProperty()
+  rowNumber: string;
+
+  @ApiProperty()
+  seatNumber: number;
 
   @ApiProperty()
   amount: number;
+}
+
+export class CategoryAmountDto {
+  @ApiProperty()
+  categoryId: string;
 
   @ApiProperty()
-  status: string;
+  categoryName: string;
+
+  @ApiProperty()
+  seatCount: number;
+
+  @ApiProperty()
+  pricePerSeat: number;
+
+  @ApiProperty()
+  totalAmount: number;
 }
 
 export class BookingHistoryResponseDto {
@@ -51,7 +77,13 @@ export class BookingHistoryResponseDto {
   bookingTime: Date;
 
   @ApiProperty()
-  totalAmount: number;
+  totalSeatAmount: number;
+
+  @ApiProperty()
+  serviceAmount: number;
+
+  @ApiProperty()
+  payableAmount: number;
 
   @ApiProperty()
   paymentStatus: string;
@@ -61,6 +93,9 @@ export class BookingHistoryResponseDto {
 
   @ApiProperty({ type: [BookingHistorySeatDto] })
   seats: BookingHistorySeatDto[];
+
+  @ApiProperty({ type: [CategoryAmountDto] })
+  categoryAmounts: CategoryAmountDto[];
 }
 
 export class PaginatedBookingHistoryResponseDto {

@@ -97,7 +97,11 @@ export class PrismaBookingRepository implements BookingRepository {
           },
           seats: {
             include: {
-              seat: true,
+              seat: {
+                include: {
+                  seatCategory: true,
+                },
+              },
             },
           },
         },
@@ -116,6 +120,8 @@ export class PrismaBookingRepository implements BookingRepository {
       id: booking.id,
       bookingTime: booking.bookingTime,
       totalAmount: booking.totalAmount.toNumber(),
+      serviceCharge: booking.serviceCharge.toNumber(),
+      expiresAt: booking.expiresAt,
       paymentStatus: booking.paymentStatus,
       show: {
         id: booking.show.id,
@@ -128,11 +134,18 @@ export class PrismaBookingRepository implements BookingRepository {
         },
       },
       seats: booking.seats.map((seat) => ({
+        seatId: seat.seatId,
         seatNumber: seat.seatNumber,
         amount: seat.amount.toNumber(),
         bookingStatus: seat.bookingStatus,
         seat: {
+          id: seat.seat.id,
           rowNumber: seat.seat.rowNumber,
+          seatCategoryId: seat.seat.seatCategoryId,
+          seatCategory: {
+            id: seat.seat.seatCategory.id,
+            name: seat.seat.seatCategory.name,
+          },
         },
       })),
     }));
