@@ -24,6 +24,7 @@ export class CommonExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message = this.resolveMessage(exception, statusCode);
+    console.error(exception);
     const status = mapStatusMessage(statusCode);
 
     response.status(statusCode).json(buildErrorResponse(message, status));

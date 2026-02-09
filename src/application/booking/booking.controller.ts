@@ -9,6 +9,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BookingService } from './booking.service';
 import {
@@ -57,7 +58,7 @@ export class BookingController {
 
   @Post('intent/:id/payment-intent')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({ summary: 'Create a Stripe payment intent for a booking' })
+  @ApiOperation({ summary: 'Create a Stripe checkout session for a booking' })
   @ApiBody({ type: CreatePaymentIntentRequestDto })
   @ApiResponse({
     status: 201,
@@ -119,9 +120,10 @@ export class BookingController {
     type: StripeWebhookResponseDto,
   })
   async handleWebhook(
-    @Body() body: any,
+    @Request() req: RawBodyRequest<Request>,
     @Headers('stripe-signature') signature: string,
   ): Promise<StripeWebhookResponseDto> {
-    return this.bookingService.handleStripeWebhook(body, signature);
+    const rawBody = req.body as unknown as Buffer;
+    return this.bookingService.handleStripeWebhook(rawBody, signature);
   }
 }

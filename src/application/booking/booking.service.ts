@@ -209,10 +209,14 @@ export class BookingService {
     const existingPaymentIntent =
       await this.paymentIntentRepository.findByBookingId(bookingIntentId);
     if (existingPaymentIntent) {
+      // For checkout, we might want to redirect to the same session URL if it hasn't expired
+      // But Stripe checkout sessions can't easily be "retrieved" for the URL if not stored.
+      // We'll store the URL in clientSecret field for now as a workaround or just create a new one.
+      // Actually, let's create a new one to be safe, or if existing, return it.
       return {
         bookingIntentId,
+        checkoutUrl: existingPaymentIntent.clientSecret, // We stored URL here
         paymentIntentId: existingPaymentIntent.stripePaymentIntentId,
-        clientSecret: existingPaymentIntent.clientSecret,
         amount: existingPaymentIntent.amount,
         currency: existingPaymentIntent.currency,
         expiresAt: booking.expiresAt,
@@ -225,31 +229,55 @@ export class BookingService {
     const stripe = this.getStripeClient();
 
     const seatIds = booking.seats.map((seat) => seat.seatId);
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: stripeAmount,
-      currency,
+
+    // Stripe checkout session creation
+    // We removed payment_method_types to allow configuration via Stripe Dashboard
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency,
+            product_data: {
+              name: 'Movie Tickets Booking',
+              description: `Booking ID: ${bookingIntentId}`,
+            },
+            unit_amount: stripeAmount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: request.successUrl,
+      cancel_url: request.cancelUrl,
       metadata: {
         bookingIntentId,
         showId: booking.showId,
         seatIds: seatIds.join(','),
       },
+      expires_at: Math.max(
+        Math.floor(Date.now() / 1000) + 31 * 60, // Minimum 31 minutes from now
+        Math.floor(booking.expiresAt.getTime() / 1000) + 5 * 60, // Adding 5 min buffer to our own expiry
+      ),
     });
+
+    console.log(`[Stripe Checkout] Session created: ${session.id}`);
+    console.log(`[Stripe Checkout] URL: ${session.url}`);
 
     await this.paymentIntentRepository.create({
       bookingId: bookingIntentId,
       userId: booking.userId,
-      stripePaymentIntentId: paymentIntent.id,
-      clientSecret: paymentIntent.client_secret ?? '',
-      status: this.mapStripeStatus(paymentIntent.status),
+      stripePaymentIntentId: session.id, // Store session ID
+      clientSecret: session.url ?? '', // Store URL in clientSecret field for now
+      status: this.mapStripeStatus(session.status ?? 'requires_payment_method'),
       amount,
       currency,
-      rawEvent: paymentIntent as unknown as Record<string, unknown>,
+      rawEvent: session as unknown as Record<string, unknown>,
     });
 
     return {
       bookingIntentId,
-      paymentIntentId: paymentIntent.id,
-      clientSecret: paymentIntent.client_secret ?? '',
+      checkoutUrl: session.url ?? '',
+      paymentIntentId: session.id,
       amount,
       currency,
       expiresAt: booking.expiresAt,
@@ -346,17 +374,38 @@ export class BookingService {
       payload: event as unknown as Record<string, unknown>,
     });
 
-    if (!event.type.startsWith('payment_intent.')) {
+    const isCheckoutEvent = event.type.startsWith('checkout.session.');
+    const isPaymentIntentEvent = event.type.startsWith('payment_intent.');
+
+    if (!isCheckoutEvent && !isPaymentIntentEvent) {
       return { received: true };
     }
 
-    const paymentIntent = event.data.object as Stripe.PaymentIntent;
+    let stripeId = '';
+    let status = '';
+
+    if (isCheckoutEvent) {
+      const session = event.data.object as Stripe.Checkout.Session;
+      stripeId = session.id;
+      status =
+        session.payment_status === 'paid'
+          ? 'succeeded'
+          : (session.status ?? 'requires_payment_method');
+    } else {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      stripeId = paymentIntent.id;
+      status = paymentIntent.status;
+    }
+
     const storedPaymentIntent =
-      await this.paymentIntentRepository.findByStripePaymentIntentId(
-        paymentIntent.id,
-      );
+      await this.paymentIntentRepository.findByStripePaymentIntentId(stripeId);
 
     if (!storedPaymentIntent) {
+      // For checkout, we might need to find by payment_intent ID if it was converted
+      if (isPaymentIntentEvent) {
+        // We probably don't have it mapped if we only stored session ID
+        // But if we handle checkout.session.completed, we should be fine.
+      }
       return { received: true };
     }
 
@@ -368,11 +417,11 @@ export class BookingService {
       return { received: true };
     }
 
-    const mappedStatus = this.mapStripeStatus(paymentIntent.status);
+    const mappedStatus = this.mapStripeStatus(status);
     await this.paymentIntentRepository.updateStatus(
-      paymentIntent.id,
+      stripeId,
       mappedStatus,
-      paymentIntent as unknown as Record<string, unknown>,
+      event.data.object as unknown as Record<string, unknown>,
     );
 
     if (booking.paymentStatus !== PaymentStatus.PENDING) {
@@ -380,7 +429,11 @@ export class BookingService {
     }
 
     const isExpired = booking.expiresAt.getTime() <= Date.now();
-    if (event.type === 'payment_intent.succeeded') {
+    const isSuccess =
+      event.type === 'payment_intent.succeeded' ||
+      event.type === 'checkout.session.completed';
+
+    if (isSuccess) {
       if (isExpired) {
         const conflictingSeats =
           await this.bookingRepository.findConflictingSeats(
@@ -394,14 +447,28 @@ export class BookingService {
 
         if (conflictingSeats.length > 0) {
           // Seats are no longer available, trigger refund
-          await stripe.refunds.create({
-            payment_intent: paymentIntent.id,
-            reason: 'requested_by_customer',
-            metadata: {
-              bookingId: booking.id,
-              reason: 'Booking expired and seats taken',
-            },
-          });
+          if (isPaymentIntentEvent) {
+            await stripe.refunds.create({
+              payment_intent: stripeId,
+              reason: 'requested_by_customer',
+              metadata: {
+                bookingId: booking.id,
+                reason: 'Booking expired and seats taken',
+              },
+            });
+          } else {
+            const session = event.data.object as Stripe.Checkout.Session;
+            if (session.payment_intent) {
+              await stripe.refunds.create({
+                payment_intent: session.payment_intent as string,
+                reason: 'requested_by_customer',
+                metadata: {
+                  bookingId: booking.id,
+                  reason: 'Booking expired and seats taken',
+                },
+              });
+            }
+          }
 
           await this.bookingRepository.updatePaymentStatusAndSeats(
             booking.id,
@@ -421,11 +488,12 @@ export class BookingService {
       return { received: true };
     }
 
-    if (
+    const isFailure =
       event.type === 'payment_intent.payment_failed' ||
       event.type === 'payment_intent.canceled' ||
-      isExpired
-    ) {
+      event.type === 'checkout.session.expired';
+
+    if (isFailure || isExpired) {
       await this.bookingRepository.updatePaymentStatusAndSeats(
         booking.id,
         PaymentStatus.FAILED,

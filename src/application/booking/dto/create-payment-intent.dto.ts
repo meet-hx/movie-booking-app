@@ -10,6 +10,22 @@ export class CreatePaymentIntentRequestDto {
   @IsString()
   @IsOptional()
   currency?: string;
+
+  @ApiProperty({
+    description: 'URL to redirect to after successful payment',
+    example: 'https://example.com/success',
+    required: true,
+  })
+  @IsString()
+  successUrl: string;
+
+  @ApiProperty({
+    description: 'URL to redirect to after cancelled payment',
+    example: 'https://example.com/cancel',
+    required: true,
+  })
+  @IsString()
+  cancelUrl: string;
 }
 
 export class CreatePaymentIntentResponseDto {
@@ -20,16 +36,26 @@ export class CreatePaymentIntentResponseDto {
   bookingIntentId: string;
 
   @ApiProperty({
-    description: 'Stripe payment intent identifier',
-    example: 'pi_3QxYvQ2eZvKYlo2C1uJq4L1o',
+    description: 'Stripe checkout session URL',
+    example: 'https://checkout.stripe.com/pay/cs_test_...',
   })
-  paymentIntentId: string;
+  checkoutUrl: string;
 
   @ApiProperty({
-    description: 'Stripe client secret for confirming payment',
-    example: 'pi_3QxYvQ2eZvKYlo2C1uJq4L1o_secret_abc123',
+    description: 'Stripe payment intent identifier',
+    example: 'pi_3QxYvQ2eZvKYlo2C1uJq4L1o',
+    required: false,
   })
-  clientSecret: string;
+  @IsOptional()
+  paymentIntentId?: string;
+
+  @ApiProperty({
+    description: 'Stripe client secret for confirming payment (if applicable)',
+    example: 'pi_3QxYvQ2eZvKYlo2C1uJq4L1o_secret_abc123',
+    required: false,
+  })
+  @IsOptional()
+  clientSecret?: string;
 
   @ApiProperty({
     description: 'Total payable amount for the booking intent',
