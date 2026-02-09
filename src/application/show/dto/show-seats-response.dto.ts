@@ -37,7 +37,67 @@ export class ShowSeatCategoryDto {
   rows: ShowSeatRowDto[];
 }
 
+export class ShowMovieDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  duration: number;
+
+  @ApiProperty()
+  type: string;
+}
+
+export class ShowTheaterDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  address: string;
+
+  @ApiProperty()
+  city: string;
+
+  @ApiProperty()
+  state: string;
+
+  @ApiProperty()
+  zipCode: string;
+
+  @ApiProperty()
+  country: string;
+}
+
+export class ShowDetailsDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  startTime: Date;
+
+  @ApiProperty()
+  endTime: Date;
+
+  @ApiProperty({ type: ShowMovieDto })
+  movie: ShowMovieDto;
+
+  @ApiProperty({ type: ShowTheaterDto })
+  theater: ShowTheaterDto;
+}
+
 export class ShowSeatsResponseDto {
+  @ApiProperty({ type: ShowDetailsDto })
+  show: ShowDetailsDto;
+
   @ApiProperty({ type: [ShowSeatCategoryDto] })
   categories: ShowSeatCategoryDto[];
 }

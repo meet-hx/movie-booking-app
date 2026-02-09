@@ -22,6 +22,7 @@ import {
   ShowSeatRowDto,
   ShowSeatCategoryDto,
   ShowSeatsResponseDto,
+  ShowDetailsDto,
 } from './dto/show-seats-response.dto';
 import { Strings } from '../../utils/strings';
 import { BookingStatus } from 'src/generated/prisma/enums';
@@ -155,7 +156,10 @@ export class ShowService {
     showId: string,
     userId?: string,
   ): Promise<ShowSeatsResponseDto> {
-    const data = await this.showRepository.getSeatAvailabilityData(showId);
+    const [data, showDetails] = await Promise.all([
+      this.showRepository.getSeatAvailabilityData(showId),
+      this.showRepository.findByIdWithDetails(showId),
+    ]);
 
     if (!data) {
       throw new NotFoundException(Strings.show.notFound);
@@ -225,7 +229,34 @@ export class ShowService {
       categoryMap.set(category.id, categoryDto);
     });
 
+    if (!showDetails) {
+      throw new NotFoundException(Strings.show.notFound);
+    }
+
+    const showDto: ShowDetailsDto = {
+      id: showId,
+      startTime: showDetails.startTime,
+      endTime: new Date(showDetails.startTime.getTime() + 2 * 60 * 60 * 1000), // Approximate end time
+      movie: {
+        id: showDetails.movie.id,
+        title: showDetails.movie.title,
+        description: showDetails.movie.description || '',
+        duration: showDetails.movie.duration,
+        type: showDetails.movie.type,
+      },
+      theater: {
+        id: showDetails.theater.id,
+        name: showDetails.theater.name,
+        address: showDetails.theater.address,
+        city: showDetails.theater.city,
+        state: showDetails.theater.state,
+        zipCode: showDetails.theater.zipCode,
+        country: showDetails.theater.country,
+      },
+    };
+
     return {
+      show: showDto,
       categories: Array.from(categoryMap.values()).sort((a, b) =>
         a.title.localeCompare(b.title),
       ),

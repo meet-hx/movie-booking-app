@@ -70,6 +70,7 @@ export interface SeatAvailabilityData {
 
 export interface ShowRepository {
   findById(id: string): Promise<Show | null>;
+  findByIdWithDetails(id: string): Promise<ShowWithDetails | null>;
   getPricingContext(showId: string, seatIds: string[]): Promise<any | null>;
   create(data: CreateShowData): Promise<Show>;
   findAll(filters: ShowFilters): Promise<Show[]>;

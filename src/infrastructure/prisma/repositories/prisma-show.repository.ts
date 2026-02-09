@@ -131,6 +131,52 @@ export class PrismaShowRepository implements ShowRepository {
     });
   }
 
+  async findByIdWithDetails(id: string): Promise<ShowWithDetails | null> {
+    const show = await this.prisma.show.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        startTime: true,
+        endTime: true,
+        movie: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            duration: true,
+            type: true,
+            genre: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        theater: {
+          select: {
+            id: true,
+            name: true,
+            address: true,
+            city: true,
+            state: true,
+            zipCode: true,
+            country: true,
+            phone: true,
+            email: true,
+            website: true,
+          },
+        },
+      },
+    });
+
+    if (!show) {
+      return null;
+    }
+
+    return show;
+  }
+
   async findAllWithDetails(filters: ShowFilters): Promise<ShowWithDetails[]> {
     const where = this.buildWhere(filters);
 
