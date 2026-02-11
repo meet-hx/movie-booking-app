@@ -1,0 +1,15 @@
+export const REPOSITORY_TOKENS = {
+  MovieRepository: Symbol('MovieRepository'),
+  BookingRepository: Symbol('BookingRepository'),
+  ShowRepository: Symbol('ShowRepository'),
+  UserRepository: Symbol('UserRepository'),
+  GenreRepository: Symbol('GenreRepository'),
+  LanguageRepository: Symbol('LanguageRepository'),
+  TheaterRepository: Symbol('TheaterRepository'),
+  TheaterScreenRepository: Symbol('TheaterScreenRepository'),
+  SeatCategoryRepository: Symbol('SeatCategoryRepository'),
+  ScreenSeatRepository: Symbol('ScreenSeatRepository'),
+  BookingSeatRepository: Symbol('BookingSeatRepository'),
+  PaymentIntentRepository: Symbol('PaymentIntentRepository'),
+  WebhookEventRepository: Symbol('WebhookEventRepository'),
+};
